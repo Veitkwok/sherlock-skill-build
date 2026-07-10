@@ -1,0 +1,365 @@
+# Skill Registry · finance-master v1.1
+# Auto-generated: 2026-06-28
+# Total: 29 skills = 26 sub-skills (with upstream sources) + 3 local (sherlock-finance, x-advanced-research, finance-master/SKILL.md)
+# 注：3 个 local skill 在 sources.local 中声明，不作为独立 entry，因此 skills 列表为 26 条。
+
+sources:
+  finance-skills:
+    repo: github.com/himself65/finance-skills
+    branch: main
+    skills: 21
+  UZI-Skill:
+    repo: github.com/wbh604/UZI-Skill
+    branch: main
+    skills: 4
+    note: purified — scripts/personas/assets stripped, investor-panel & lhb-analyzer rewritten to v4.0 agent-driven
+  serenity-skill:
+    repo: github.com/muxuuu/serenity-skill
+    branch: main
+    skills: 1
+    note: purified — Python scripts deleted, bottleneck-scorecard.md created
+  local:
+    skills: 3
+    note: sherlock-finance, x-advanced-research, finance-master/SKILL.md (no upstream)
+
+skills:
+  # === SECURITY LAYER (priority 0) ===
+  - name: trap-detector
+    source: UZI-Skill
+    category: security
+    priority: 0
+    triggers:
+      - "朋友推荐"
+      - "群里说"
+      - "老师带"
+      - "内幕消息"
+      - "小红书推荐"
+      - "抖音荐股"
+      - "稳赚"
+      - "必涨"
+    combinations: []
+    conflicts: []
+
+  # === DEEP ANALYSIS LAYER (priority 1) ===
+  - name: deep-analysis
+    source: UZI-Skill
+    category: deep-analysis
+    priority: 1
+    triggers:
+      - "深度分析"
+      - "全面分析"
+      - "帮我看看"
+      - "值不值得买"
+      - "DCF"
+      - "机构建模"
+      - "首次覆盖"
+      - "IC memo"
+      - "投委会"
+    combinations: [investor-panel]
+    conflicts_priority_over: [company-valuation]
+
+  - name: investor-panel
+    source: UZI-Skill
+    category: deep-analysis
+    priority: 2
+    triggers:
+      - "评审团"
+      - "大佬怎么看"
+      - "投票"
+      - "某某会买吗"
+      - "投资者怎么看"
+    combinations: [deep-analysis]
+    conflicts: []
+
+  - name: lhb-analyzer
+    source: UZI-Skill
+    category: deep-analysis
+    priority: 1
+    triggers:
+      - "龙虎榜"
+      - "游资"
+      - "谁在买"
+      - "席位"
+    combinations: [finance-sentiment]
+    conflicts: []
+    note: A 股龙虎榜专用，美股请求不会触发
+
+  # === VALUATION LAYER (priority 3) ===
+  - name: company-valuation
+    source: finance-skills
+    category: valuation
+    priority: 3
+    triggers:
+      - "估值"
+      - "目标价"
+      - "PE"
+      - "PB"
+      - "ROE"
+      - "财报分析"
+    combinations: [yfinance-data]
+    conflicts_priority_over: []
+
+  - name: earnings-preview
+    source: finance-skills
+    category: valuation
+    priority: 3
+    triggers:
+      - "盈利预测"
+      - "业绩前瞻"
+      - "财报前瞻"
+    combinations: [estimate-analysis]
+    conflicts: []
+
+  - name: earnings-recap
+    source: finance-skills
+    category: valuation
+    priority: 4
+    triggers:
+      - "财报解读"
+      - "业绩回顾"
+      - "beat"
+      - "miss"
+    combinations: []
+    conflicts: []
+
+  - name: estimate-analysis
+    source: finance-skills
+    category: valuation
+    priority: 3
+    triggers:
+      - "分析师预期"
+      - "一致预期"
+      - "estimate revision"
+      - "上调"
+      - "下调"
+    combinations: []
+    conflicts: []
+
+  - name: sepa-strategy
+    source: finance-skills
+    category: valuation
+    priority: 3
+    triggers:
+      - "SEPA"
+      - "Minervini"
+      - "VCP"
+      - "趋势模板"
+      - "Stage分析"
+    combinations: []
+    conflicts: []
+
+  - name: stock-correlation
+    source: finance-skills
+    category: valuation
+    priority: 4
+    triggers:
+      - "相关性"
+      - "同行业"
+      - "pair trade"
+      - "跟谁走"
+      - "联动"
+    combinations: []
+    conflicts: []
+
+  - name: stock-liquidity
+    source: finance-skills
+    category: valuation
+    priority: 4
+    triggers:
+      - "流动性"
+      - "买卖价差"
+      - "成交量"
+    combinations: []
+    conflicts: []
+
+  - name: options-payoff
+    source: finance-skills
+    category: valuation
+    priority: 4
+    triggers:
+      - "期权"
+      - "payoff"
+      - "到期日"
+      - "strike"
+      - "Call"
+      - "Put"
+    combinations: []
+    conflicts: []
+
+  - name: etf-premium
+    source: finance-skills
+    category: valuation
+    priority: 4
+    triggers:
+      - "ETF"
+      - "折溢价"
+      - "NAV"
+    combinations: []
+    conflicts: []
+
+  - name: saas-valuation-compression
+    source: finance-skills
+    category: valuation
+    priority: 4
+    triggers:
+      - "SaaS"
+      - "估值压缩"
+      - "ARR"
+      - "MRR"
+      - "Rule of 40"
+    combinations: []
+    conflicts: []
+
+  # === DATA LAYER (priority 2 — load before analysis) ===
+  - name: yfinance-data
+    source: finance-skills
+    category: data
+    priority: 2
+    triggers:
+      - "股价"
+      - "行情"
+      - "k线"
+      - "历史数据"
+      - "yfinance"
+    combinations: [company-valuation]
+    conflicts: []
+
+  - name: finance-sentiment
+    source: finance-skills
+    category: data
+    priority: 4
+    triggers:
+      - "情绪"
+      - "舆情"
+      - "Reddit"
+      - "X sentiment"
+      - "华尔街讨论"
+    combinations: []
+    conflicts: []
+
+  - name: funda-data
+    source: finance-skills
+    category: data
+    priority: 2
+    triggers:
+      - "基本面数据"
+      - "财务数据"
+      - "funda"
+    combinations: [company-valuation]
+    conflicts_priority_over: [yfinance-data]
+
+  - name: hormuz-strait
+    source: finance-skills
+    category: data
+    priority: 4
+    triggers:
+      - "霍尔木兹海峡"
+      - "航运"
+      - "地缘"
+      - "原油供应中断"
+    combinations: []
+    conflicts: []
+
+  - name: tradingview-reader
+    source: finance-skills
+    category: data
+    priority: 4
+    triggers:
+      - "TradingView"
+    combinations: []
+    conflicts: []
+
+  # === SOCIAL LAYER (priority 4 — Hermes only, Grok → web/X search) ===
+  - name: discord-reader
+    source: finance-skills
+    category: social
+    priority: 4
+    triggers:
+      - "Discord"
+    combinations: []
+    conflicts: []
+    note: Hermes only · opencli
+
+  - name: linkedin-reader
+    source: finance-skills
+    category: social
+    priority: 4
+    triggers:
+      - "LinkedIn"
+    combinations: []
+    conflicts: []
+    note: Hermes only · opencli
+
+  - name: telegram-reader
+    source: finance-skills
+    category: social
+    priority: 4
+    triggers:
+      - "Telegram"
+    combinations: []
+    conflicts: []
+    note: Hermes only · CLI
+
+  - name: twitter-reader
+    source: finance-skills
+    category: social
+    priority: 4
+    triggers:
+      - "Twitter"
+      - "X.com"
+    combinations: []
+    conflicts: []
+    note: Hermes only · opencli · Grok 模式由 x-advanced-research 替代
+
+  - name: opencli-reader
+    source: finance-skills
+    category: social
+    priority: 5
+    triggers:
+      - "通用阅读"
+      - "网页抓取"
+    combinations: []
+    conflicts: []
+    note: Hermes only · opencli
+
+  # === STARTUP LAYER (priority 4) ===
+  - name: startup-analysis
+    source: finance-skills
+    category: startup
+    priority: 4
+    triggers:
+      - "创业分析"
+      - "startup"
+      - "VC"
+      - "天使"
+      - "种子轮"
+    combinations: []
+    conflicts: []
+
+  # === SUPPLY CHAIN LAYER (priority 3) ===
+  - name: serenity-skill
+    source: serenity-skill
+    category: supply-chain
+    priority: 3
+    triggers:
+      - "供应链"
+      - "瓶颈"
+      - "卡脖子"
+      - "chokepoint"
+      - "Serenity"
+    combinations: [deep-analysis, x-advanced-research]
+    conflicts: []
+
+# Conflict resolution rules
+conflict_rules:
+  - when: ["deep-analysis", "company-valuation"]
+    resolve: "deep-analysis wins (superset)"
+  - when: ["earnings-preview", "earnings-recap"]
+    resolve: "earnings-preview wins, recap as supplement"
+  - when: ["funda-data", "yfinance-data"]
+    resolve: "funda-data wins (data quality)"
+
+# Security pre-checks
+security_precheck:
+  - when: any trigger from trap-detector
+    action: "load trap-detector first, block analysis until cleared · §9 安全优先分支"

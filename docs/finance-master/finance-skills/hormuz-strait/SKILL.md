@@ -1,122 +1,75 @@
 ---
 name: hormuz-strait
 description: >
-  Check the current status of the Strait of Hormuz — shipping transit data, oil price impact,
-  stranded vessels, insurance risk levels, diplomatic developments, and global trade impact.
-  Use this skill whenever the user asks about the Strait of Hormuz, Hormuz chokepoint, Persian Gulf
-  shipping risk, oil transit disruption, war risk premium in the Gulf, Middle East shipping routes,
-  tanker traffic through Hormuz, oil supply chain risk, or geopolitical risk affecting energy markets.
-  Triggers include: "Hormuz status", "Strait of Hormuz", "is Hormuz open", "shipping through the Gulf",
-  "oil chokepoint", "Persian Gulf tanker traffic", "war risk premium", "Hormuz crisis",
-  "energy supply chain risk", "oil transit disruption", "Middle East shipping",
-  any mention of Hormuz or Persian Gulf in context of oil, shipping, or geopolitical risk.
+  Strait of Hormuz / Gulf energy-shipping risk monitor for macro context on US equities.
+  v4.6.6: public Web dashboard/API if available + Web news; optional IBKR energy futures.
+  Triggers: Hormuz, oil chokepoint, Gulf tanker, war risk premium, Hormuz closed.
+version: 4.6.8
+ecosystem: 4.6.8
+metadata:
+  tags: [finance, macro, energy, geopolitics]
+  market_scope: MACRO_US_IMPLICATIONS
+  role: L2_TOOL
 ---
 
-# Hormuz Strait Monitor Skill
+# Hormuz Strait · v4.6.6
 
-Fetches real-time status of the Strait of Hormuz from the [Hormuz Strait Monitor](https://hormuzstraitmonitor.com) dashboard API. Covers shipping transits, oil prices, stranded vessels, insurance risk, diplomatic status, global trade impact, and crisis timeline.
+## Consumer rules
 
-**This skill is read-only.** It fetches public dashboard data — no authentication required.
+1. Try public monitor: `curl -s https://hormuzstraitmonitor.com/api/dashboard` if network allows; on failure → Web news synthesis.  
+2. Web: transit status, insurance war-risk, diplomatic headlines.  
+3. Optional IBKR: crude/energy futures snapshot for price context.  
+4. Map **implications for US equities** (energy, transports, inflation narrative) — not A-share.  
+5. Schema notes: `references/api_schema.md` if dashboard shape needed.
 
----
+## Deliver
 
-## Step 1: Fetch Dashboard Data
+| Section | Content |
+|---------|---------|
+| Status | Open / impaired / uncertain |
+| Shipping & oil | Key stats or qualitative |
+| Risk level | Low–extreme (justified) |
+| US market transmission | Sectors/tickers sensitive |
+| Watch items | Next 48h–2w |
 
-Use `curl` to fetch the dashboard API:
+```text
 
-```bash
-curl -s https://hormuzstraitmonitor.com/api/dashboard
+## L2 confidence (Cog-4 · advisory only)
+
+`confidence` in `### RETURN_BLOCK` is **skill-local deliverable quality**, not user investment confidence.
+
+| Rule | Max grade |
+|------|-----------|
+| `status: partial` or material `fields_gap` | **B** |
+| X/social-only evidence for hard claims | **C** |
+| `status: blocked` | no thesis A |
+| Complete skill scope + hard sources + no material gaps | **A** allowed (still advisory) |
+
+Default `confidence_scope` for this skill: **single_dim**.
+
+Also emit Cog-4 fields when practical: `confidence_scope`, `confidence_basis` (evidence_independence, physical_mechanical, data_gaps_material), `limiting_factors`.
+
+**Never** emit Brain `### CONFIDENCE_BLOCK` or `mode:` — the Central Brain re-grades via §H.6.
+
+### RETURN_BLOCK
+skill: hormuz-strait
+status: ok|partial
+ticker: MACRO
+confidence: A|B|C
+confidence_scope: single_dim
+confidence_basis:
+  evidence_independence: strong|weak|gap
+  physical_mechanical: strong|weak|gap
+  data_gaps_material: true|false
+limiting_factors: []
+fields_filled: [status, risk]
+fields_gap: [...]
+artifacts:
+  status: open|impaired|uncertain
+  risk_level: ...
+  us_equity_implications: [...]
+counterfactuals: []
+raw_notes: <≤250 words>
 ```
 
-Parse the JSON response. The API returns `{ "success": true, "data": { ... }, "timestamp": "..." }`.
-
-If `success` is `false` or the request fails, inform the user the monitor is temporarily unavailable and suggest checking https://hormuzstraitmonitor.com directly.
-
----
-
-## Step 2: Identify What the User Needs
-
-Match the user's request to the relevant data sections. If the user asks for a general status update, present all sections. If they ask about something specific, focus on the relevant section(s).
-
-| User Request | Data Section | Key Fields |
-|---|---|---|
-| General status / "is Hormuz open?" | `straitStatus` | `status`, `since`, `description` |
-| Ship traffic / transit count | `shipCount` | `currentTransits`, `last24h`, `normalDaily`, `percentOfNormal` |
-| Oil price impact | `oilPrice` | `brentPrice`, `change24h`, `changePercent24h`, `sparkline` |
-| Stranded / stuck vessels | `strandedVessels` | `total`, `tankers`, `bulk`, `other`, `changeToday` |
-| Insurance / war risk | `insurance` | `level`, `warRiskPercent`, `normalPercent`, `multiplier` |
-| Cargo throughput | `throughput` | `todayDWT`, `averageDWT`, `percentOfNormal`, `last7Days` |
-| Diplomatic situation | `diplomacy` | `status`, `headline`, `parties`, `summary` |
-| Global trade impact | `globalTradeImpact` | `percentOfWorldOilAtRisk`, `estimatedDailyCostBillions`, `affectedRegions`, `lngImpact`, `alternativeRoutes`, `supplyChainImpact` |
-| Crisis timeline / events | `crisisTimeline` | `events[]` with `date`, `type`, `title`, `description` |
-| Tanker freight rates / VLCC rates | `tankerRates` | `currentRate`, `preCrisisRate`, `changePercent`, `route`, `vesselType`, `trend`, `unit` |
-| Latest news | `news` | `title`, `source`, `url`, `publishedAt`, `description` |
-
----
-
-## Step 3: Present the Data
-
-Format the results clearly for financial research. Adapt the presentation based on what the user asked for.
-
-### General status briefing (default)
-
-When the user asks for a general update, present a concise briefing covering all key sections:
-
-1. **Strait Status** — lead with the current status (e.g., "OPEN", "RESTRICTED", "CLOSED"), how long it's been in that state, and the description
-2. **Ship Traffic** — current transits, last 24h count, and percent of normal
-3. **Oil Price** — Brent price with 24h change
-4. **Stranded Vessels** — total count broken down by type, with today's change
-5. **Insurance Risk** — risk level, war risk premium percentage, and multiplier vs. normal
-6. **Cargo Throughput** — today's DWT vs. average, percent of normal
-7. **Diplomatic Status** — current status, headline, and brief summary
-8. **Global Trade Impact** — percent of world oil at risk, estimated daily cost, and top affected regions
-9. **Tanker Freight Rates** — current VLCC rate on the benchmark route vs. pre-crisis baseline, with trend direction
-
-### Formatting guidelines
-
-- Use tables for structured data (vessel counts, affected regions, alternative routes)
-- Highlight abnormal values — if `percentOfNormal` is below 80% or above 120%, call it out
-- For `oilPrice.sparkline`, describe the trend (rising, falling, stable) rather than listing raw numbers
-- For `throughput.last7Days`, describe the trend direction
-- Show `lastUpdated` timestamp so the user knows data freshness
-- For news items, include the source and link
-- For crisis timeline events, present chronologically with event type labels
-
-### Risk assessment
-
-Based on the data, provide a brief risk assessment:
-
-Values are returned uppercase.
-
-| Insurance Level | Interpretation |
-|---|---|
-| `NORMAL` | No elevated risk — shipping operating normally |
-| `ELEVATED` | Some disruption concerns — monitor closely |
-| `HIGH` | Significant risk — active disruption or credible threat |
-| `CRITICAL` | Severe disruption — major impact on global oil supply |
-| `EXTREME` | Effective closure — war risk premiums at multi-decade highs, most commercial traffic halted |
-
-If the strait status is anything other than fully open, highlight:
-- The estimated daily cost to global trade
-- Which regions are most affected and their oil dependency
-- Available alternative routes with additional transit days and cost
-- LNG impact if applicable
-- SPR (Strategic Petroleum Reserve) status in days
-
----
-
-## Step 4: Respond to the User
-
-- Lead with the most important information: strait status and any active disruption
-- Include data freshness (`lastUpdated` timestamp)
-- If the situation is elevated or worse, proactively include the global trade impact summary
-- Keep the response concise for routine "all clear" statuses; expand for active incidents
-- Add a disclaimer: data is sourced from Hormuz Strait Monitor and may have delays
-
----
-
-## Reference Files
-
-- `references/api_schema.md` — Complete API response schema with field descriptions and data types
-
-Read the reference file when you need exact field names or data type details.
+*v4.6.6 · DATA_PACK consumer · Cog-4 conf advisory · IBKR market-data only*

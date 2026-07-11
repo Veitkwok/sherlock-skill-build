@@ -1,5 +1,7 @@
 # Structured Output Templates for x-advanced-research
 
+> **v4.5:** Always also emit `### RETURN_BLOCK` per `../SKILL.md`. Discovery mode: US tickers only, ≤15 names, `next_brain_hint: serenity_score` when handing off to Brain chain. Do not call serenity/deep from this skill.
+
 所有输出必须遵循结构化原则：**可引用 + 可行动 + 洞察优先**。始终包含 citations（post URLs）、关键原文引用、engagement metrics。
 
 ## 通用研究报告模板（Trend / Topic Monitoring）

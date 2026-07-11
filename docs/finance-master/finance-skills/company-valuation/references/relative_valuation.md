@@ -1,5 +1,9 @@
 # Relative Valuation — Detailed Reference
 
+> ⚠️ **v4.6.6 data fence:** Do **not** `import yfinance`, `pip install yfinance`, or execute `yf.*` / `Ticker(`. Live path = Brain **DATA_PACK** → **IBKR MCP** → **Web/X**. Any remaining Yahoo-shaped names are **labels only**, not runnable code.
+
+
+
 Relative valuation implies a price by applying peer multiples. Fast, market-anchored, and captures sentiment — but "garbage in, garbage out" when peers are poorly chosen.
 
 ## Peer Selection Heuristics

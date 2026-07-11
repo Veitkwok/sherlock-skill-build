@@ -1,105 +1,131 @@
-# 杀猪盘 8 信号 · 详细判定标准
+# Trap detector · 8 signals (v4.5)
 
-## 信号 1: 大量低质量账号同时推荐
-
-**判定**:
-- web search "{name} 推荐" 返回 ≥ 10 个标题相似的内容
-- 内容来自 0-100 粉的小号 / 新建公众号
-- 推荐时间集中在近 7-30 天
-
-**证据收集**: 列出 3-5 个示例 URL 及账号 metric
+> Used by `trap-detector/SKILL.md`. All market data via **Brain Data Pack**, **IBKR MCP**, or **Web**.  
+> **Banned:** `fetch_financials`, `fetch_sentiment`, `fetch_kline`, `fetch_capital_flow`, akshare, longbridge, yfinance skill, funda skill.
 
 ---
 
-## 信号 2: 推荐话术模板化
+## Signal 1 · Coordinated low-quality accounts
 
-**关键词清单** (出现 ≥ 2 个即命中):
-- "即将爆发" / "重大利好"
-- "主力建仓完毕" / "庄家洗盘结束"
-- "目标翻倍" / "目标价 XX 元"
-- "最后上车机会" / "错过等十年"
-- "底部反转信号" / "技术面突破"
-- "内部消息" / "知情人爆料"
+**Hit when (any 2):**
+- Web/X shows many near-identical “buy {name}” posts in 7–30 days  
+- Accounts look new / low engagement / bot-like  
+- Same copy-paste target price or emoji stack across handles  
 
----
+**Collect:** 3–5 example URLs or post IDs + rough timing.
 
-## 信号 3: 付费社群 / VIP 直播间引流
-
-**判定**:
-- 搜索 "{name} 微信群"、"{name} 直播间"、"{name} VIP" 命中
-- 推荐内容附带二维码 / 加群链接 / 老师微信
-- 抖音 / 快手直播间出现该股
+**Tools:** `web_search`, X keyword/semantic search.  
+Query seeds: `"{TICKER} buy"`, `"{name} 推荐"`, `"{TICKER} moon"`, `"{TICKER} target"`.
 
 ---
 
-## 信号 4: 基本面与热度脱节
+## Signal 2 · Template hype language
 
-**判定** (任一命中即触发):
-- 公司亏损或 ROE < 5%，但近 30 天讨论量翻倍
-- 行业景气度下行，但股价异动
-- 财务造假嫌疑（应收账款 / 存货异常）+ 推广热度高
+**Hit when ≥2 distinct templates appear** in tip content:
 
-调 `fetch_financials` 和 `fetch_sentiment` 交叉验证。
-
----
-
-## 信号 5: K 线异常配合
-
-**判定**:
-- 推荐密集期前 30-60 天内已有 ≥ 50% 涨幅
-- 推荐密集期出现放量横盘 / 拉升出货特征
-- 大宗交易折价 + 推广同时发生
-
-调 `fetch_kline` + `fetch_capital_flow` 验证。
+| CN | EN |
+|----|-----|
+| 即将爆发 / 重大利好 | “about to explode”, “massive catalyst” |
+| 主力建仓完毕 / 庄家洗盘结束 | “smart money loaded”, “accumulation done” |
+| 目标翻倍 / 最后上车 | “double from here”, “last chance” |
+| 内部消息 / 知情人 | “insider”, “I know someone” |
+| 底部反转 / 技术面突破 | “breakout confirmed” (with no chart substance) |
 
 ---
 
-## 信号 6: "老师 / 股神" 人设推广
+## Signal 3 · Paid group / VIP funnel
 
-**关键词**:
-- "X 老师"、"操盘手 X"、"内部老师"、"打板高手"
-- 配图常为豪车 / 名表 / 高额对账单截图
-- 历史"战绩"无法验证（无龙虎榜、无实盘账户）
+**Hit when:**
+- Mentions of paid Discord/Telegram/WeChat VIP, “加群”, live-stream stock tips tied to the name  
+- QR / invite links next to the ticker pitch  
+- “Signal group” upsell as the main CTA  
 
----
-
-## 信号 7: 跨平台联动推广
-
-**判定**: 在 ≥ 3 个平台同时找到推荐
-- 小红书
-- 抖音 / 快手
-- B 站
-- 知乎
-- 公众号矩阵
-- Twitter / 微博
+**Tools:** Web search `"{name} VIP"`, `"{TICKER} Discord signals"`, `"{name} 直播间"`, `"{name} 微信群"`.
 
 ---
 
-## 信号 8: 虚假研报 / 伪造消息
+## Signal 4 · Fundamentals vs hype disconnect
 
-**判定**:
-- 搜索 "{name} 谣言" / "{name} 辟谣" 命中公司公告
-- 网传研报无券商水印 / 无分析师签名
-- 公司主动澄清传闻
+**Hit when (any):**
+- Loss-making or ROE very weak **and** social volume spike  
+- Clear sector downcycle **and** aggressive “must buy” campaign  
+- Aggressive growth claims with no public filing support  
+
+**Data (in order):**
+1. Brain `data_pack.fundamentals_web` / quote context  
+2. Else **one** Web search: `"{TICKER} revenue profit ROE market cap"`  
+3. Heat: X search volume / Web “why is {TICKER} trending”  
+
+**Do not** invent financials. If missing → `data_gap` (does not count as hit unless hype is extreme **and** user keyword boost ≥2).
 
 ---
 
-## 用户输入关键词加权
+## Signal 5 · Price already ran into the tip
 
-```python
-USER_KEYWORDS = {
-    "朋友推荐": 1, "群里": 1, "老师": 1, "带我": 1,
-    "内幕": 2, "稳赚": 2, "必涨": 1, "翻倍": 1,
-    "稳赚不赔": 2, "包赚": 2,
-}
-# 命中后将 trap_score 直接降 N 档
-```
+**Hit when (any):**
+- ~30–60d (or ytd) return ≳ +40–50% **before** tip cluster  
+- Tip wave coincides with climax volume / vertical extension  
+- Large gap-up into tip day with no new primary filing  
 
-## 评级映射
+**Data (in order):**
+1. Brain Data Pack: last, prior performance, 52w, volume  
+2. Else IBKR: `get_price_snapshot` (`change`, `cumulative_perf_*`, `misc_statistics`, `volume`) + optional `get_price_history` `ONE_DAY` / `ONE_MONTH`  
+3. Else Web: `"{TICKER} stock performance 1 month"`  
 
-| 命中数 + 加权 | trap_score | level |
-|---|---|---|
-| 0-1 | 9-10 | 🟢 安全 |
-| 2-3 | 6-8 | 🟡 注意 |
-| 4-5 | 3-5 | 🟠 警惕 |
-| 6+ | 1-2 | 🔴 高度可疑 |
+**Banned:** `fetch_kline`, `fetch_capital_flow`.
+
+---
+
+## Signal 6 · Guru / “teacher” persona
+
+**Hit when:**
+- “X 老师 / 股神 / 操盘手 / signal coach” pushing the name  
+- Lifestyle flex (cars, fake PnL screenshots) without verifiable track record  
+- Pressure to trust the person over filings  
+
+**Tools:** Web + X `"{name} 老师"`, `"{TICKER} signals group"`, `"{name} 股神"`.
+
+---
+
+## Signal 7 · Cross-platform blast
+
+**Hit when** same pitch appears on **≥3** distinct platforms within ~2 weeks, e.g.:
+- X / Twitter  
+- Reddit (via Web)  
+- TikTok / 抖音 / YouTube (via Web)  
+- Telegram/Discord mention pages  
+- Blog/WeChat reposts  
+
+Single-platform organic chatter alone is **not** a hit.
+
+---
+
+## Signal 8 · Fake research / forged news
+
+**Hit when:**
+- Company or reputable outlet **denies** rumor  
+- “Research PDF” without broker, analyst, or date  
+- Fabricated partnership / contract claims circulating with tip flow  
+
+**Tools:** Web `"{TICKER} rumor"`, `"{TICKER} denies"`, `"{name} 辟谣"`, `"{name} 澄清"`.
+
+---
+
+## Keyword boost (user text)
+
+| Match | Add to effective hit count |
+|-------|----------------------------:|
+| 朋友推荐 / 群里 / 老师 / friend / group tip | +1 |
+| 内幕 / 稳赚 / guaranteed / insider | +2 |
+| 必涨 / 翻倍 / easy money | +1 |
+
+## Level map
+
+| Effective hits | trap_score | level |
+|----------------|------------|-------|
+| 0–1 | 9–10 | 🟢 |
+| 2–3 | 6–8 | 🟡 |
+| 4–5 | 3–5 | 🟠 |
+| 6+ | 1–2 | 🔴 |
+
+`trap_score` is **higher = safer** (legacy convention).

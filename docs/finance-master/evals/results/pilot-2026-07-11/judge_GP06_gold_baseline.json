@@ -1,0 +1,48 @@
+{
+  "scenario_id": "GP06",
+  "mode_effective": "standard",
+  "structural_precheck": "pass",
+  "artifact": "evals/artifacts/GP06_sample_output.md",
+  "dimensions": {
+    "data_plane": {
+      "score": 5,
+      "notes": "IBKR last + WEB FCF abstract + explicit synthetic flags; no banned stacks"
+    },
+    "reasoning_engine": {
+      "score": 4,
+      "notes": "Givens, assumptions, sensitivity triangle; light multi-cause"
+    },
+    "confidence_integrity": {
+      "score": 5,
+      "notes": "Brain B with full dims; L2 A not adopted; CN with falsifiers"
+    },
+    "mode_and_routing": {
+      "score": 5,
+      "notes": "standard company-valuation allowlist; cards ≤3"
+    },
+    "safety_and_compliance": {
+      "score": 5,
+      "notes": "Framework only; no order language"
+    },
+    "output_clinicality": {
+      "score": 4,
+      "notes": "Dense tables; research framing clear"
+    },
+    "cog4_handoff": {
+      "score": 5,
+      "notes": "INVOKE/RETURN + L2_CONF_ADVISORY + BRAIN_REGRADE"
+    }
+  },
+  "overall_0_to_100": 94,
+  "verdict": "pass",
+  "critical_fails": [],
+  "strengths": [
+    "Cog-4 re-grade textbook",
+    "Sensitivity and gaps explicit"
+  ],
+  "improvements": [
+    "Could add one Bayes-style update line if new L0 arrives"
+  ],
+  "judge": "baseline_human_calibration_on_gold",
+  "asof": "2026-07-11"
+}

@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Finance-Master · Technical Handbook v4.6.8</title>
+<meta name="description" content="Interactive bilingual handbook for finance-master v4.6.8" />
+<style>
+:root {
+  --bg: #050505;
+  --bg-elev: #0a0a0a;
+  --bg-panel: #0e0e0e;
+  --bg-hover: #141414;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #f5f5f5;
+  --text-dim: #8a8a8a;
+  --text-mute: #5c5c5c;
+  --accent: #e8e8e8;
+  --glow: rgba(255,255,255,0.04);
+  --green: #7dffa8;
+  --amber: #ffd27a;
+  --red: #ff8a8a;
+  --blue: #9ecbff;
+  --mono: "SF Mono", "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  --sans: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --sidebar-w: 280px;
+  --radius: 10px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, kbd, pre { font-family: var(--mono); font-size: 0.86em; }
+code {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+pre {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  color: #d8d8d8;
+}
+pre code { background: none; border: none; padding: 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+  margin: 1rem 0 1.5rem;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-dim);
+  font-weight: 500;
+  font-size: 0.8em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+tr:hover td { background: var(--glow); }
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: rgba(5,5,5,0.92);
+  backdrop-filter: blur(12px);
+  padding: 1.25rem 0.9rem 2rem;
+}
+.brand {
+  padding: 0.4rem 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.9rem;
+}
+.brand .logo {
+  font-size: 0.72em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 0.35rem;
+}
+.brand h1 {
+  font-size: 1.05rem;
+  font-weight: 560;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+.brand .meta {
+  margin-top: 0.4rem;
+  font-size: 0.78em;
+  color: var(--text-dim);
+}
+.lang-toggle {
+  display: flex;
+  gap: 0.3rem;
+  margin: 0 0 0.85rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-panel);
+}
+.lang-toggle button {
+  flex: 1;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-dim);
+  border-radius: 6px;
+  padding: 0.4rem 0.5rem;
+  font: inherit;
+  font-size: 0.82em;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+}
+.lang-toggle button.active {
+  color: var(--text);
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+.search {
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.55rem 0.7rem;
+  margin: 0.2rem 0 0.9rem;
+  font: inherit;
+  font-size: 0.88em;
+}
+.search:focus {
+  outline: none;
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
+}
+.nav-section {
+  font-size: 0.68em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  padding: 0.75rem 0.6rem 0.35rem;
+}
+.nav a {
+  display: block;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0.38rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.88em;
+  border: 1px solid transparent;
+}
+.nav a:hover, .nav a.active {
+  color: var(--text);
+  background: var(--bg-hover);
+  border-color: var(--border);
+}
+.main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2.2rem 2.4rem 5rem;
+}
+.hero {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2rem 2rem 1.6rem;
+  background:
+    radial-gradient(800px 240px at 10% -20%, rgba(255,255,255,0.07), transparent 60%),
+    var(--bg-elev);
+  margin-bottom: 2.2rem;
+}
+.hero .badge {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.72em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.7rem;
+  line-height: 1.15;
+}
+.hero p.lead {
+  color: var(--text-dim);
+  font-size: 1.02rem;
+  max-width: 48rem;
+  margin: 0 0 1.2rem;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chip {
+  font-size: 0.75em;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  background: rgba(255,255,255,0.02);
+}
+.chip strong { color: var(--text); font-weight: 500; }
+section {
+  margin: 2.4rem 0;
+  scroll-margin-top: 1.2rem;
+}
+section > h2 {
+  font-size: 1.35rem;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--border);
+}
+h3 {
+  font-size: 1.05rem;
+  font-weight: 560;
+  margin: 1.6rem 0 0.6rem;
+  color: var(--accent);
+}
+h4 {
+  font-size: 0.92rem;
+  font-weight: 550;
+  margin: 1.2rem 0 0.45rem;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+p { color: #d0d0d0; margin: 0.55rem 0 0.9rem; }
+ul, ol { color: #d0d0d0; padding-left: 1.25rem; }
+li { margin: 0.28rem 0; }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.4rem;
+}
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.95rem 1rem;
+  background: var(--bg-panel);
+}
+.card h4 { margin: 0 0 0.4rem; color: var(--text); font-size: 0.95rem; }
+.card p { margin: 0; font-size: 0.88em; color: var(--text-dim); }
+.tag {
+  display: inline-block;
+  font-size: 0.7em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  margin-right: 0.25rem;
+}
+.tag.g { color: var(--green); border-color: rgba(125,255,168,0.25); }
+.tag.a { color: var(--amber); border-color: rgba(255,210,122,0.25); }
+.tag.r { color: var(--red); border-color: rgba(255,138,138,0.25); }
+.tag.b { color: var(--blue); border-color: rgba(158,203,255,0.25); }
+.collapse {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 0.7rem 0;
+  overflow: hidden;
+  background: var(--bg-panel);
+}
+.collapse summary {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  list-style: none;
+  color: var(--text);
+  font-weight: 500;
+  user-select: none;
+}
+.collapse summary::-webkit-details-marker { display: none; }
+.collapse summary::after {
+  content: "+";
+  float: right;
+  color: var(--text-mute);
+  font-family: var(--mono);
+}
+.collapse[open] summary::after { content: "−"; }
+.collapse .body { padding: 0 1rem 1rem; border-top: 1px solid var(--border); }
+.tabs {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin: 0.8rem 0 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+}
+.tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88em;
+}
+.tab-btn:hover { color: var(--text); background: var(--bg-hover); }
+.tab-btn.active {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+.tab-panel { display: none; padding-top: 0.8rem; }
+.tab-panel.active { display: block; }
+.callout {
+  border-left: 2px solid var(--border-strong);
+  background: rgba(255,255,255,0.02);
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+.callout.warn { border-left-color: rgba(255,210,122,0.5); }
+.callout.danger { border-left-color: rgba(255,138,138,0.55); }
+.callout.ok { border-left-color: rgba(125,255,168,0.45); }
+.flow {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  white-space: pre;
+  line-height: 1.45;
+  color: #cfcfcf;
+}
+.footer {
+  margin-top: 3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-mute);
+  font-size: 0.82em;
+}
+.topbar-mobile {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(5,5,5,0.95);
+  border-bottom: 1px solid var(--border);
+  padding: 0.7rem 1rem;
+  backdrop-filter: blur(10px);
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar-mobile .right { display: flex; gap: 0.4rem; align-items: center; }
+.topbar-mobile button {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  font: inherit;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+/* i18n: hide inactive language nodes */
+html[lang="en"] .zh { display: none !important; }
+html[lang="zh"] .en { display: none !important; }
+/* tables with dual language cells use class on spans */
+@media (max-width: 920px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: min(86vw, 320px);
+    transform: translateX(-105%);
+    transition: transform 0.2s ease;
+    z-index: 30;
+    box-shadow: 20px 0 60px rgba(0,0,0,0.5);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .topbar-mobile { display: flex; }
+  .main { padding: 1.4rem 1.1rem 4rem; }
+}
+@media print {
+  .sidebar, .topbar-mobile, .search, .lang-toggle { display: none !important; }
+  .layout { display: block; }
+  html[lang="en"] .zh, html[lang="zh"] .en { display: none !important; }
+}
+mark[data-q] {
+  background: rgba(255,210,122,0.22);
+  color: inherit;
+  border-radius: 2px;
+}
+</style>
+</head>
+<body>
+<div class="topbar-mobile">
+  <strong style="font-size:0.9em;letter-spacing:-0.02em;">Finance-Master v4.6.8</strong>
+  <div class="right">
+    <button type="button" id="langToggleMobile" aria-label="Toggle language">中文</button>
+    <button type="button" id="navToggle" aria-label="Open navigation">Menu</button>
+  </div>
+</div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">xAI-style ops · Grok skill</div>
+      <h1>Finance-Master</h1>
+      <div class="meta">
+        <span class="en">Technical Handbook · v4.6.8</span>
+        <span class="zh">完整技术手册 · v4.6.8</span>
+      </div>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" id="langEn" class="active" data-lang="en">English</button>
+      <button type="button" id="langZh" data-lang="zh">中文</button>
+    </div>
+    <input class="search" id="search" type="search" autocomplete="off"
+      data-ph-en="Search handbook…" data-ph-zh="搜索手册…" placeholder="Search handbook…" />
+    <nav class="nav" id="nav">
+      <div class="nav-section"><span class="en">Overview</span><span class="zh">总览</span></div>
+      <a href="#overview"><span class="en">Overview</span><span class="zh">总览</span></a>
+      <a href="#architecture"><span class="en">Architecture</span><span class="zh">架构</span></a>
+      <a href="#inventory"><span class="en">Skill inventory</span><span class="zh">技能清单</span></a>
+      <div class="nav-section"><span class="en">Runtime</span><span class="zh">运行时</span></div>
+      <a href="#modes"><span class="en">Runtime modes</span><span class="zh">运行模式</span></a>
+      <a href="#data-plane"><span class="en">Data plane & IBKR</span><span class="zh">数据平面与 IBKR</span></a>
+      <a href="#data-pack"><span class="en">DATA_PACK schema</span><span class="zh">DATA_PACK 模式</span></a>
+      <a href="#routing"><span class="en">Routing tree §9</span><span class="zh">路由树 §9</span></a>
+      <div class="nav-section"><span class="en">Cognition</span><span class="zh">认知层</span></div>
+      <a href="#engine"><span class="en">Reasoning engine</span><span class="zh">推理引擎</span></a>
+      <a href="#confidence"><span class="en">Confidence v3.0</span><span class="zh">置信度 v3.0</span></a>
+      <a href="#methods"><span class="en">Method library</span><span class="zh">方法库</span></a>
+      <a href="#cog4"><span class="en">Cog-4 L2 conf</span><span class="zh">Cog-4 L2 置信</span></a>
+      <div class="nav-section"><span class="en">Operations</span><span class="zh">运维</span></div>
+      <a href="#paths"><span class="en">Golden paths</span><span class="zh">黄金路径</span></a>
+      <a href="#safety"><span class="en">Safety & bans</span><span class="zh">安全与禁用</span></a>
+      <a href="#evals"><span class="en">Val-1 evals</span><span class="zh">Val-1 评测</span></a>
+      <a href="#auditor"><span class="en">Auditor monitor</span><span class="zh">审计监控</span></a>
+      <a href="#grok"><span class="en">Grok upload</span><span class="zh">Grok 上传</span></a>
+      <a href="#cheatsheet"><span class="en">Operator cheatsheet</span><span class="zh">操作速查</span></a>
+    </nav>
+  </aside>
+  <main class="main" id="content">
+
+    <header class="hero" id="overview">
+      <div class="badge"><span>● LIVE</span><span>US equities</span><span>Grok Web / Build</span></div>
+      <h1 class="en">Finance-Master<br/>Technical Handbook</h1>
+      <h1 class="zh">Finance-Master<br/>完整技术手册</h1>
+      <p class="lead en">
+        Single-orchestrator research OS for US equities. The Central Brain
+        (<code>sherlock-finance</code>) owns modes, data plane, confidence, and L2 handoffs.
+        This handbook is the operational source of truth for product <strong>v4.6.8</strong>.
+      </p>
+      <p class="lead zh">
+        美股研究单一编排操作系统。中央大脑（<code>sherlock-finance</code>）掌管模式、数据平面、置信度与 L2 交接。
+        本手册是产品 <strong>v4.6.8</strong> 的运维真源。
+      </p>
+      <div class="chips">
+        <span class="chip"><strong>20</strong> <span class="en">live skills</span><span class="zh">活跃技能</span></span>
+        <span class="chip"><strong>3</strong> <span class="en">modes</span><span class="zh">模式</span></span>
+        <span class="chip"><strong>conf v3.0</strong></span>
+        <span class="chip"><strong>DATA_PACK</strong></span>
+        <span class="chip"><strong>IBKR</strong> <span class="en">research-only</span><span class="zh">仅研究</span></span>
+        <span class="chip"><strong>Val-1</strong> 6/6 + 10/10</span>
+      </div>
+    </header>
+
+    <section id="architecture">
+      <h2><span class="en">1 · Architecture</span><span class="zh">1 · 架构</span></h2>
+      <p class="en">Three-layer OS. L0 only detects and delegates. L1 is the sole orchestrator. L2 executes and returns.</p>
+      <p class="zh">三层操作系统。L0 仅检测并委托。L1 是唯一编排者。L2 执行并回传。</p>
+      <pre class="flow">User query
+  │
+  ▼
+L0  finance-master/SKILL.md          trigger · mode phrase pass-through
+  │
+  ▼
+L1  sherlock-finance                 Brain-Cog-4
+  │  §0 runtime + mode
+  │  §C hard constraints
+  │  §D IBKR → Web → X
+  │  §1 Steps 0–5 + conf + CN
+  │  §M method cards (0–6)
+  │  §9 route · §H handoff · §H.6 re-grade
+  ▼
+L2  18 execution skills
+      UZI · finance-skills · serenity · x-advanced-research</pre>
+      <div class="card-grid">
+        <div class="card">
+          <h4>L0 Entry</h4>
+          <p class="en">Detect US finance intent. Load Brain. No analysis, no tools at L0.</p>
+          <p class="zh">识别美股/金融意图。加载大脑。L0 不做分析、不调工具。</p>
+        </div>
+        <div class="card">
+          <h4>L1 Brain</h4>
+          <p class="en">Modes, packs, conf, routing, trap-first safety, discovery caps.</p>
+          <p class="zh">模式、数据包、置信、路由、陷阱优先安全、发现深度上限。</p>
+        </div>
+        <div class="card">
+          <h4>L2 Tools</h4>
+          <p class="en">RETURN_BLOCK only. No lateral L2→L2. Brain merges and re-grades.</p>
+          <p class="zh">仅 RETURN_BLOCK。禁止 L2 横向互调。大脑合并并重评置信。</p>
+        </div>
+        <div class="card">
+          <h4><span class="en">Local evals</span><span class="zh">本地评测</span></h4>
+          <p class="en"><code>evals/</code> structural suite — optional for Grok upload.</p>
+          <p class="zh"><code>evals/</code> 结构测试套件 — Grok 上传可选。</p>
+        </div>
+      </div>
+      <div class="callout ok">
+        <strong class="en">Non-negotiable:</strong>
+        <strong class="zh">不可妥协：</strong>
+        <span class="en">Brain owns data and confidence. L2 confidence is advisory (Cog-4). Discovery is Brain-owned: x-advanced-research → serenity-skill → deep-analysis×N.</span>
+        <span class="zh">大脑拥有数据与置信度。L2 置信仅作咨询（Cog-4）。发现链由大脑拥有：x-advanced-research → serenity-skill → deep-analysis×N。</span>
+      </div>
+    </section>
+
+    <section id="inventory">
+      <h2><span class="en">2 · Skill inventory (20)</span><span class="zh">2 · 技能清单（20）</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="en">Role</span><span class="zh">角色</span></th>
+            <th><span class="en">Path</span><span class="zh">路径</span></th>
+            <th>n</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>L0</td><td><code>SKILL.md</code></td><td>1</td></tr>
+          <tr><td>L1 Brain</td><td><code>sherlock-finance/</code></td><td>1</td></tr>
+          <tr>
+            <td><span class="en">Discovery</span><span class="zh">发现</span></td>
+            <td><code>x-advanced-research/</code>, <code>serenity-skill/</code></td><td>2</td></tr>
+          <tr><td>UZI</td><td><code>deep-analysis</code>, <code>investor-panel</code>, <code>trap-detector</code></td><td>3</td></tr>
+          <tr>
+            <td><span class="en">US tools</span><span class="zh">美股工具</span></td>
+            <td>valuation, earnings-*, sepa, options, liquidity, corr, sentiment, etf, saas, startup, hormuz</td>
+            <td>13</td></tr>
+        </tbody>
+      </table>
+      <details class="collapse">
+        <summary>
+          <span class="en">Full finance-skills list (13)</span>
+          <span class="zh">finance-skills 完整列表（13）</span>
+        </summary>
+        <div class="body">
+          <p><code>company-valuation</code> · <code>earnings-preview</code> · <code>earnings-recap</code> · <code>estimate-analysis</code> · <code>etf-premium</code> · <code>finance-sentiment</code> · <code>hormuz-strait</code> · <code>options-payoff</code> · <code>saas-valuation-compression</code> · <code>sepa-strategy</code> · <code>startup-analysis</code> · <code>stock-correlation</code> · <code>stock-liquidity</code></p>
+        </div>
+      </details>
+      <div class="callout warn">
+        <strong class="en">Hermes watcher freeze:</strong>
+        <strong class="zh">Hermes 监视冻结：</strong>
+        <span class="en">do not restructure internals of <code>finance-skills/</code>, <code>UZI-Skill/</code>, <code>serenity-skill/</code>.</span>
+        <span class="zh">勿改动 <code>finance-skills/</code>、<code>UZI-Skill/</code>、<code>serenity-skill/</code> 的内部目录结构。</span>
+      </div>
+    </section>
+
+    <section id="modes">
+      <h2><span class="en">3 · Runtime modes</span><span class="zh">3 · 运行模式</span></h2>
+      <div class="tabs" data-tabs="modes">
+        <button type="button" class="tab-btn active" data-tab="lite">lite</button>
+        <button type="button" class="tab-btn" data-tab="standard">standard</button>
+        <button type="button" class="tab-btn" data-tab="max">max</button>
+      </div>
+      <div class="tab-panel active" data-panel="lite">
+        <h3>lite</h3>
+        <p class="en">Horizon <strong>1–7 days</strong>. Tape + short forecast + optional X heat.</p>
+        <p class="zh">视界 <strong>1–7 天</strong>。盘面 + 短线预测 + 可选 X 热度。</p>
+        <ul>
+          <li class="en">Packs: <code>QUOTE</code> / <code>INTRADAY</code> / short <code>SWING</code></li>
+          <li class="zh">数据包：<code>QUOTE</code> / <code>INTRADAY</code> / 短 <code>SWING</code></li>
+          <li class="en">Tools/turn: ~3–8 · method cards: <strong>0</strong></li>
+          <li class="zh">每轮工具：~3–8 · 方法卡：<strong>0</strong></li>
+          <li class="en">No multi-deep DAG, no default panel36 / serenity universe</li>
+          <li class="zh">禁止多票 deep DAG；默认不做 panel36 / serenity 宇宙扫描</li>
+          <li class="en">Conf ceiling: default ≤B; X-only ≤C; A only with ≥3 chains + IBKR + Givens</li>
+          <li class="zh">置信上限：默认 ≤B；仅 X ≤C；A 需 ≥3 独立链 + IBKR + Givens</li>
+        </ul>
+        <pre>lite mode
+NVDA 近几天走势和关键位，X 情绪简要，短线怎么看？</pre>
+      </div>
+      <div class="tab-panel" data-panel="standard">
+        <h3>standard <span class="tag b">default</span> <span class="tag b zh">默认</span></h3>
+        <p class="en">Horizon <strong>1–3 months</strong>. Single-name research, deep, DCF, buy framing.</p>
+        <p class="zh">视界 <strong>1–3 个月</strong>。单票研究、深度、DCF、买卖框架。</p>
+        <ul>
+          <li class="en">Packs: <code>SWING</code> or <code>DEEP</code></li>
+          <li class="zh">数据包：<code>SWING</code> 或 <code>DEEP</code></li>
+          <li class="en">Tools/turn: ~8–16 · method cards: 0–3</li>
+          <li class="zh">每轮工具：~8–16 · 方法卡：0–3</li>
+          <li class="en">Discovery deep× ≤1 · panel allowed</li>
+          <li class="zh">发现 deep× ≤1 · 允许评审团</li>
+          <li class="en">Conf: A allowed if all dims strong</li>
+          <li class="zh">置信：五维皆强时允许 A</li>
+        </ul>
+        <pre>standard mode
+PLTR 深度分析，现在值得买吗？</pre>
+      </div>
+      <div class="tab-panel" data-panel="max">
+        <h3>max</h3>
+        <p class="en">Screens, bottleneck hunting, multi-name forensics.</p>
+        <p class="zh">筛选、卡点猎取、多票取证。</p>
+        <ul>
+          <li class="en">Packs: <code>DEEP</code> per deep name</li>
+          <li class="zh">每个 deep 名：<code>DEEP</code> 包</li>
+          <li class="en">Tools/turn: ~16–30 · method cards: 1–6</li>
+          <li class="zh">每轮工具：~16–30 · 方法卡：1–6</li>
+          <li class="en">Discovery: x-adv → serenity → deep× ≤3</li>
+          <li class="zh">发现链：x-adv → serenity → deep× ≤3</li>
+          <li class="en">Pre-deep shortlist grades ≤B until deep pack</li>
+          <li class="zh">预 deep 名单等级 ≤B，直到完成 DEEP 包</li>
+        </ul>
+        <pre>max mode
+Serenity 风格找 AI 基础设施链上卡点最紧的美股，优先研究名单</pre>
+      </div>
+      <h3><span class="en">Auto-upgrade</span><span class="zh">自动升级</span></h3>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="en">User also asks…</span><span class="zh">用户还要求…</span></th>
+            <th>mode_effective ≥</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>深度分析 / DCF / IC memo / 全面分析</td><td>standard</td></tr>
+          <tr><td>Serenity扫描 / 找卡点 / multi-name screen</td><td>max</td></tr>
+          <tr>
+            <td class="en">trap keywords only</td>
+            <td class="zh">仅陷阱关键词</td>
+            <td class="en">keep mode; still hard-stop</td>
+            <td class="zh">保持模式；仍硬停</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="data-plane">
+      <h2><span class="en">4 · Data plane &amp; IBKR redline</span><span class="zh">4 · 数据平面与 IBKR 红线</span></h2>
+      <pre class="flow">SESSION_CACHE (fresh) → REUSE
+IBKR (Tier-1 market structure)
+Web (filings, consensus, news)
+X (social / narrative alpha)
+missing → DATA_GAP (never invent)</pre>
+      <h3><span class="en">Allowed IBKR tools</span><span class="zh">允许的 IBKR 工具</span></h3>
+      <p><code>search_contracts</code> · <code>get_price_snapshot</code> · <code>get_price_history</code> · <span class="en">option structure tools</span><span class="zh">期权结构工具</span> · <code>get_company_themes</code> · <code>get_company_connections</code> · <code>search_futures</code> <span class="en">(macro context)</span><span class="zh">（宏观语境）</span></p>
+      <div class="callout danger">
+        <strong class="en">Absolute redline — no user override:</strong>
+        <strong class="zh">绝对红线 — 用户不可覆盖：</strong>
+        <span class="en">never call <code>create_order_instruction</code>, order lists, account positions/trades/balances, or watchlist mutate. Even if the user asks to stage a trade: refuse in-tree; offer position framework only.</span>
+        <span class="zh">禁止调用下单指令、订单列表、持仓/成交/余额、自选股变更。即使用户要求挂单：树内拒绝；仅提供仓位框架。</span>
+      </div>
+      <h3><span class="en">Banned stacks</span><span class="zh">禁用栈</span></h3>
+      <p>yfinance · longbridge · funda · AkShare · opencli readers · lhb-analyzer / 游资 · script-era fetchers</p>
+      <p class="en">Canonical ban list for ops: <code>finance-master-auditor/references/banned-patterns.yaml</code></p>
+      <p class="zh">运维规范禁用表：<code>finance-master-auditor/references/banned-patterns.yaml</code></p>
+    </section>
+
+    <section id="data-pack">
+      <h2><span class="en">5 · DATA_PACK schema</span><span class="zh">5 · DATA_PACK 模式</span></h2>
+      <p class="en">Canonical fields: <code>sherlock-finance/references/data-pack-schema.md</code></p>
+      <p class="zh">规范字段：<code>sherlock-finance/references/data-pack-schema.md</code></p>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="en">Kind</span><span class="zh">类型</span></th>
+            <th><span class="en">Minimum</span><span class="zh">最低要求</span></th>
+            <th><span class="en">Typical mode</span><span class="zh">典型模式</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>QUOTE</code></td><td>ticker, asof, last, contract_id?</td><td><span class="en">any</span><span class="zh">任意</span></td></tr>
+          <tr><td><code>INTRADAY</code></td><td>QUOTE + short ohlcv (5m/1d)</td><td>lite / §12</td></tr>
+          <tr><td><code>SWING</code></td><td class="en">QUOTE + daily structure + catalysts preferred</td><td class="zh">QUOTE + 日线结构 + 优先催化剂</td><td>standard / §13</td></tr>
+          <tr><td><code>DEEP</code></td><td class="en">SWING + fundamentals core + peers preferred + gaps[]</td><td class="zh">SWING + 基本面核心 + 优先 peers + gaps[]</td><td>deep / max</td></tr>
+        </tbody>
+      </table>
+      <pre>DATA_PACK:
+  kind: DEEP
+  asof: ISO-8601
+  mode_effective: standard
+  ticker: SYM
+  contract_id: &lt;int&gt;
+  ibkr_available: true|false
+  sources_used: [IBKR, WEB, X]
+  quote: { last, prior_close, volume, avg_90d_usd_volume, w52_high, w52_low, ... }
+  ohlcv: { daily[], intraday_5m[] }
+  fundamentals_web: { fcf_ttm?, margins?, shares?, quality }
+  catalysts_web: { next_earnings?, events[] }
+  peers: { symbols[], theme_labels[] }
+  social_x: { posts[], heat }
+  gaps: [field.path, ...]</pre>
+      <div class="callout warn">
+        <span class="en">Outside RTH, session OHLC/volume may be empty while <code>last</code> + history remain usable — prefer history over inventing bars.</span>
+        <span class="zh">非 RTH 时，会话 OHLC/成交量可能为空，但 <code>last</code> + 历史仍可用 — 优先用历史，禁止编造 K 线。</span>
+      </div>
+    </section>
+
+    <section id="routing">
+      <h2><span class="en">6 · Protocol selection tree (§9)</span><span class="zh">6 · 协议选择树（§9）</span></h2>
+      <pre class="flow">User request
+├── trap keywords → trap-detector → STOP if elevated
+├── intraday 1–7d → §12 (lite preferred)
+├── short path 1–4w / 1–3m → §13
+├── Serenity / screen
+│     lite: block multi-deep DAG
+│     standard: deep×≤1
+│     max: deep×≤3 + DEEP pack
+├── named deep / buy → deep-analysis + §6/§10
+├── single-dim tools → allowlist
+├── quote / sentiment → §D / finance-sentiment / x-adv
+└── forensic / macro / narrative → §1–§3 / §7</pre>
+      <h3><span class="en">L2 allowlist (mode_effective)</span><span class="zh">L2 白名单（mode_effective）</span></h3>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="en">Path</span><span class="zh">路径</span></th>
+            <th>lite</th><th>standard</th><th>max</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>§D / §12 / short §13</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>finance-sentiment, x-adv</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr>
+            <td class="en">valuation &amp; single-dim tools</td>
+            <td class="zh">估值与单维工具</td>
+            <td>△ <span class="en">explicit</span><span class="zh">显式</span></td><td>✓</td><td>✓</td>
+          </tr>
+          <tr><td>deep-analysis</td><td class="en">upgrade only</td><td class="zh">仅升级后</td><td>✓</td><td>✓</td></tr>
+          <tr><td>investor-panel</td><td>✗</td><td>✓ Top-10/US-36</td><td>✓</td></tr>
+          <tr><td>serenity</td><td>✗</td><td>△ <span class="en">one name</span><span class="zh">单票</span></td><td>✓</td></tr>
+          <tr><td>trap-detector</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr>
+            <td class="en">banned skills</td>
+            <td class="zh">禁用技能</td>
+            <td>✗</td><td>✗</td><td>✗</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="engine">
+      <h2><span class="en">7 · Reasoning engine (Steps 0–5)</span><span class="zh">7 · 推理引擎（步骤 0–5）</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="en">Step</span><span class="zh">步骤</span></th>
+            <th><span class="en">Name</span><span class="zh">名称</span></th>
+            <th><span class="en">Core duty</span><span class="zh">核心职责</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0</td>
+            <td class="en">Pre-observation</td><td class="zh">预观察</td>
+            <td class="en">Attic filter + L0 sources before any L1 thesis</td>
+            <td class="zh">阁楼过滤 + L0 来源，先于任何 L1 论点</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Givens</td>
+            <td class="en">Restate question; Givens table (lite ≥1 row)</td>
+            <td class="zh">重述问题；Givens 表（lite ≥1 行）</td>
+          </tr>
+          <tr>
+            <td>1b</td>
+            <td>Timeline</td>
+            <td class="en">When causal; else N/A</td>
+            <td class="zh">因果场景时启用；否则 N/A</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td class="en">Hypotheses</td><td class="zh">假设</td>
+            <td class="en">Multi-cause; ≥1 counter-narrative on non-trivial</td>
+            <td class="zh">多因分解；非琐碎题至少 1 个反叙事</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td class="en">Falsification</td><td class="zh">证伪</td>
+            <td class="en">Disconfirm first; physical priority over narrative</td>
+            <td class="zh">先找反证；物理/机械优先于叙事</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td class="en">Convergence</td><td class="zh">收敛</td>
+            <td class="en">Occam + Bayes-style re-rank (no fake %)</td>
+            <td class="zh">奥卡姆 + 贝叶斯式重排（禁止伪概率%）</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td class="en">Exposure</td><td class="zh">暴露</td>
+            <td class="en">L0–L3 layers + Challenge Nodes</td>
+            <td class="zh">L0–L3 分层 + 挑战节点</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3><span class="en">Hard constraints (§C)</span><span class="zh">硬约束（§C）</span></h3>
+      <p><span class="tag r">A1</span> <span class="en">never guess</span><span class="zh">禁止猜测</span> ·
+         <span class="tag r">A2</span> <span class="en">never twist facts</span><span class="zh">禁止扭曲事实</span> ·
+         <span class="tag r">A3</span> <span class="en">never override risk</span><span class="zh">禁止覆盖风险信号</span> ·
+         <span class="tag r">A4</span> <span class="en">clinical</span><span class="zh">临床表达</span> ·
+         <span class="tag r">A5</span> <span class="en">signaling ≠ evidence</span><span class="zh">信号≠证据</span></p>
+      <p><span class="tag a">B1–B6</span>
+        <span class="en">epistemic honesty: ignorance, pollution flags, accept contest, capacity, bias, rigor cost</span>
+        <span class="zh">认知诚实：承认无知、污染标记、接受质疑、容量、偏见、严谨成本</span></p>
+    </section>
+
+    <section id="confidence">
+      <h2><span class="en">8 · Confidence v3.0</span><span class="zh">8 · 置信度 v3.0</span></h2>
+      <p class="en">Grade = <strong>weakest dimension</strong>, not vibe. Mandatory on directional theses in all modes.</p>
+      <p class="zh">等级 = <strong>最弱维度</strong>，不是感觉。所有模式下的方向性论点必须输出。</p>
+      <pre>### CONFIDENCE_BLOCK
+grade: A|B|C
+mode: lite|standard|max
+dims:
+  evidence_independence: strong|weak|gap
+  falsification_rigor: strong|weak|gap
+  assumption_audit: strong|weak|gap
+  physical_mechanical: strong|weak|gap
+  layer_integrity: strong|weak|gap
+limiting: [...]
+verification_density: "..."
+independent_chains: ["IBKR:...", "WEB:...", "X?:..."]
+
+### CHALLENGE_NODES
+- id: CN1
+  layer: L2|L3|assumption|conf_dim
+  claim: "..."
+  assumption: "..."
+  what_would_falsify: "observable + window"
+  conf_dim_link: ...</pre>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="en">Grade</span><span class="zh">等级</span></th>
+            <th><span class="en">Meaning</span><span class="zh">含义</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A</td>
+            <td class="en">All 5 dims strong; ≥3 independent chains; Givens this turn; hard-data dominant</td>
+            <td class="zh">五维皆强；≥3 独立链；本轮 Givens；硬数据主导</td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td class="en">Directional; ≥1 dim weak</td>
+            <td class="zh">可方向性；≥1 维偏弱</td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td class="en">Multiple weak / narrative-heavy — never A/B tone</td>
+            <td class="zh">多维弱 / 叙事过重 — 禁止 A/B 语气</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="en">Independent chain catalog: IBKR market pack · primary filing/transcript · ownership (13F/Form4) · at most one X cluster. Three news links ≠ three chains.</p>
+      <p class="zh">独立链目录：IBKR 市场包 · 主披露/纪要 · 所有权（13F/Form4）· 至多一条 X 簇。三条同题新闻链 ≠ 三条独立链。</p>
+      <h3><span class="en">Challenge node minimums</span><span class="zh">挑战节点下限</span></h3>
+      <table>
+        <thead><tr><th>mode</th><th><span class="en">Min nodes</span><span class="zh">最少节点</span></th></tr></thead>
+        <tbody>
+          <tr><td>lite</td><td>1</td></tr>
+          <tr><td>standard</td><td class="en">1; 2 if grade B/C</td><td class="zh">1；B/C 时 2</td></tr>
+          <tr><td>max</td><td class="en">≥2; ≥3 if B/C or multi-name screen</td><td class="zh">≥2；B/C 或多票筛选 ≥3</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="methods">
+      <h2><span class="en">9 · Method library (Cog-3)</span><span class="zh">9 · 方法库（Cog-3）</span></h2>
+      <p class="en">On-demand cards M01–M12 under <code>sherlock-finance/references/method-library/</code>. Never dump the whole library.</p>
+      <p class="zh">按需卡片 M01–M12，位于 <code>sherlock-finance/references/method-library/</code>。禁止整库灌入上下文。</p>
+      <table>
+        <thead><tr><th>mode</th><th><span class="en">Max cards</span><span class="zh">上限</span></th></tr></thead>
+        <tbody>
+          <tr><td>lite</td><td>0</td></tr>
+          <tr><td>standard</td><td>0–3</td></tr>
+          <tr><td>max</td><td>1–6</td></tr>
+        </tbody>
+      </table>
+      <p class="en">Record <code>METHOD_CARDS_LOADED: [M05, M01, …]</code> or <code>method_cards_skipped: lite|budget</code>.</p>
+      <p class="zh">记录 <code>METHOD_CARDS_LOADED: [M05, M01, …]</code> 或 <code>method_cards_skipped: lite|budget</code>。</p>
+      <details class="collapse">
+        <summary>
+          <span class="en">Card map (first-12)</span>
+          <span class="zh">卡片地图（首 12 张）</span>
+        </summary>
+        <div class="body">
+          <p>M01 obs-before-deduce · M02 reverse reconstruction · M03 asymmetry · M04 brain attic · M05 physical priority · M06 anti-conspiracy · M07 empty space · M08 rest test · M09 role-behavior · M10 provocation stress · M11 clinical compression · M12 empathy pollution</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="cog4">
+      <h2><span class="en">10 · Cog-4 · L2 confidence alignment</span><span class="zh">10 · Cog-4 · L2 置信对齐</span></h2>
+      <p class="en">L2 emits skill-local quality only. Brain emits user-facing conf.</p>
+      <p class="zh">L2 仅输出技能局部质量。大脑输出用户面向置信。</p>
+      <pre>### RETURN_BLOCK
+skill: ...
+status: ok|partial|blocked
+confidence: A|B|C
+confidence_scope: skill_local|safety|discovery|valuation|panel|sentiment|single_dim
+confidence_basis:
+  evidence_independence: strong|weak|gap
+  physical_mechanical: strong|weak|gap
+  data_gaps_material: true|false
+limiting_factors: []
+fields_filled: [...]
+fields_gap: [...]
+artifacts: {...}
+counterfactuals: [...]
+raw_notes: ≤400 words</pre>
+      <p class="en">Ceilings: partial or material gaps → L2 ≤B; X-only hard claims → ≤C. After every RETURN:</p>
+      <p class="zh">上限：partial 或实质性缺口 → L2 ≤B；硬主张仅 X → ≤C。每次 RETURN 后：</p>
+      <pre>L2_CONF_ADVISORY: A (company-valuation, scope=valuation)
+BRAIN_REGRADE: B (reason: material fields_gap; §H.6)</pre>
+      <p class="en">L2 must <strong>never</strong> emit <code>### CONFIDENCE_BLOCK</code> or <code>mode:</code>.</p>
+      <p class="zh">L2 <strong>禁止</strong>输出 <code>### CONFIDENCE_BLOCK</code> 或 <code>mode:</code>。</p>
+    </section>
+
+    <section id="paths">
+      <h2><span class="en">11 · Golden paths (Val-1)</span><span class="zh">11 · 黄金路径（Val-1）</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th><span class="en">Mode</span><span class="zh">模式</span></th>
+            <th><span class="en">Path</span><span class="zh">路径</span></th>
+            <th><span class="en">Core assert</span><span class="zh">核心断言</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>GP01</td><td>standard</td><td class="en">Deep + buy</td><td class="zh">深度 + 买卖</td><td>DEEP · RETURN · re-grade · conf · §10</td></tr>
+          <tr><td>GP02</td><td>lite</td><td class="en">Tape + X</td><td class="zh">盘面 + X</td><td class="en">0 cards · kill · conf ceiling</td><td class="zh">0 卡 · kill · 置信上限</td></tr>
+          <tr><td>GP03</td><td>standard</td><td class="en">Swing 1–3m</td><td class="zh">波段 1–3 月</td><td class="en">Web catalysts + levels</td><td class="zh">Web 催化剂 + 价位</td></tr>
+          <tr><td>GP04</td><td class="en">any</td><td class="zh">任意</td><td class="en">Trap stop</td><td class="zh">陷阱硬停</td><td>hard_stop · no buy</td></tr>
+          <tr><td>GP05</td><td>max</td><td class="en">Discovery</td><td class="zh">发现</td><td>deep×≤3 · pre-deep ≤B · US only</td></tr>
+          <tr><td>GP06</td><td>standard</td><td class="en">DCF tool</td><td class="zh">DCF 工具</td><td class="en">RETURN · Brain re-grade</td><td class="zh">RETURN · 大脑重评</td></tr>
+        </tbody>
+      </table>
+      <pre>python3 docs/finance-master/evals/run_structural_checks.py
+# Gold must PASS · negatives must META_PASS</pre>
+    </section>
+
+    <section id="safety">
+      <h2><span class="en">12 · Safety &amp; bans</span><span class="zh">12 · 安全与禁用</span></h2>
+      <h3><span class="en">Trap-first</span><span class="zh">陷阱优先</span></h3>
+      <p class="en">Tip language (群里/老师/稳赚/insider/guaranteed) → <code>trap-detector</code> → 🟠/🔴 hard stop. No valuation, no §10 buy framing.</p>
+      <p class="zh">荐股话术（群里/老师/稳赚/insider/guaranteed）→ <code>trap-detector</code> → 🟠/🔴 硬停。禁止估值，禁止 §10 买入框架。</p>
+      <h3><span class="en">Domain veto (§6)</span><span class="zh">领域否决（§6）</span></h3>
+      <p class="en">Trap · extreme macro liquidity · empty Cui Bono when required · revenge/zombie trading cognition.</p>
+      <p class="zh">陷阱 · 极端宏观流动性 · 必要时 Cui Bono 为空 · 报复/僵尸交易认知。</p>
+      <h3><span class="en">Banned skills (not in tree)</span><span class="zh">禁用技能（不在树内）</span></h3>
+      <p class="en">lhb-analyzer · yfinance-data · funda-data · social opencli readers · generative-ui · etc. (full list in auditor ban YAML).</p>
+      <p class="zh">lhb-analyzer · yfinance-data · funda-data · 社交 opencli 阅读器 · generative-ui 等（完整列表见 auditor 禁用 YAML）。</p>
+      <h3><span class="en">Deep live fin-methods only</span><span class="zh">深度分析存活 fin-methods</span></h3>
+      <p class="en"><code>ai-readiness.md</code> · <code>serenity-bottleneck.md</code>. Earnings preview → L2 skill, not legacy multi-market docs.</p>
+      <p class="zh"><code>ai-readiness.md</code> · <code>serenity-bottleneck.md</code>。财报前瞻 → L2 skill，而非遗留多市场文档。</p>
+    </section>
+
+    <section id="evals">
+      <h2><span class="en">13 · Validation structures</span><span class="zh">13 · 验证结构</span></h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4><span class="en">Structural</span><span class="zh">结构检查</span></h4>
+          <p class="en">Regex suite: conf, modes, cards, bans, deep caps, re-grade logs.</p>
+          <p class="zh">正则套件：置信、模式、方法卡、禁用、deep 上限、重评日志。</p>
+        </div>
+        <div class="card">
+          <h4><span class="en">Negatives</span><span class="zh">负例</span></h4>
+          <p class="en">NEG01–10 intentional fails; suite meta-passes when they fail correctly.</p>
+          <p class="zh">NEG01–10 故意失败；它们正确失败时套件 META_PASS。</p>
+        </div>
+        <div class="card">
+          <h4>LLM-as-judge</h4>
+          <p class="en"><code>evals/rubrics/llm_as_judge.md</code> — semantic layer after structural PASS.</p>
+          <p class="zh"><code>evals/rubrics/llm_as_judge.md</code> — 结构 PASS 后的语义层。</p>
+        </div>
+        <div class="card">
+          <h4><span class="en">Pilot</span><span class="zh">试点</span></h4>
+          <p class="en">IBKR market-data pilot logs under <code>evals/results/</code>.</p>
+          <p class="zh">IBKR 市场数据试点日志位于 <code>evals/results/</code>。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="auditor">
+      <h2><span class="en">14 · finance-master-auditor (v4.6.8)</span><span class="zh">14 · finance-master-auditor（v4.6.8）</span></h2>
+      <p class="en"><strong>Monitor &amp; notify only.</strong> Same version as product. Watches three upstreams; never auto-merges.</p>
+      <p class="zh"><strong>仅监控与通知。</strong>与产品同版本。监视三个上游；永不自动合并。</p>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="en">Notify</span><span class="zh">通知</span></th>
+            <th><span class="en">Skip</span><span class="zh">跳过</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="en">SKILL.md / references methodology changes</td>
+            <td class="zh">SKILL.md / references 方法论变更</td>
+            <td class="en">HTML, assets, scripts, plugin.json, README-only</td>
+            <td class="zh">HTML、资产、脚本、plugin.json、仅 README</td>
+          </tr>
+          <tr>
+            <td class="en">Product-relevant skill add/remove</td>
+            <td class="zh">产品相关技能增删</td>
+            <td class="en">Banned skill churn only</td>
+            <td class="zh">仅禁用技能的上游噪音</td>
+          </tr>
+        </tbody>
+      </table>
+      <pre>python3 skill-watchdog.py
+# → skill-watch-diff.json  notify: true|false
+# Human upgrades finance-master manually when notified</pre>
+    </section>
+
+    <section id="grok">
+      <h2><span class="en">15 · Grok Web upload</span><span class="zh">15 · Grok Web 上传</span></h2>
+      <p class="en">See <code>GROK_UPLOAD.md</code>. Upload Markdown skill pack:</p>
+      <p class="zh">见 <code>GROK_UPLOAD.md</code>。上传 Markdown 技能包：</p>
+      <ul>
+        <li class="en">Include: L0, Brain, x-adv, finance-skills, UZI, serenity</li>
+        <li class="zh">包含：L0、大脑、x-adv、finance-skills、UZI、serenity</li>
+        <li class="en">Optional exclude: <code>evals/</code></li>
+        <li class="zh">可选排除：<code>evals/</code></li>
+        <li class="en">Never include auditor as part of this skill zip</li>
+        <li class="zh">切勿把 auditor 打进该技能压缩包</li>
+      </ul>
+      <p class="en">Every live <code>SKILL.md</code> requires YAML frontmatter (<code>name</code>, <code>description</code>, <code>version</code>).</p>
+      <p class="zh">每个存活 <code>SKILL.md</code> 需要 YAML 头（<code>name</code>、<code>description</code>、<code>version</code>）。</p>
+    </section>
+
+    <section id="cheatsheet">
+      <h2><span class="en">16 · Operator cheatsheet</span><span class="zh">16 · 操作员速查</span></h2>
+      <div class="callout">
+        <strong class="en">Session open:</strong>
+        <strong class="zh">开场：</strong>
+        <span class="en">name ticker · horizon · decision type → pick mode → paste query with mode first line → demand conf blocks → stress-test grade after return.</span>
+        <span class="zh">点名标的 · 视界 · 决策类型 → 选模式 → 粘贴查询（首行模式）→ 要求置信块 → 回传后压力测试等级。</span>
+      </div>
+      <h3><span class="en">Draft query skeleton</span><span class="zh">查询草稿骨架</span></h3>
+      <pre>{lite|standard|max} mode
+{TICKER or US theme}
+Pack: {QUOTE|INTRADAY|SWING|DEEP}
+Need: last, ADV/52w, earnings?, FCF/margins?, peers?, kills
+Caps: deep×≤{1|3}; no panel unless asked; no order tools
+Output: L0 sources · Givens · CONFIDENCE_BLOCK · CHALLENGE_NODES · framework-only if buy</pre>
+      <h3><span class="en">Conf sanity</span><span class="zh">置信自检</span></h3>
+      <ul>
+        <li class="en">mode field == mode_effective?</li>
+        <li class="zh">mode 字段 == mode_effective？</li>
+        <li class="en">A with ≥3 independent chains?</li>
+        <li class="zh">A 是否具备 ≥3 独立链？</li>
+        <li class="en">X-only → ≤C?</li>
+        <li class="zh">仅 X → ≤C？</li>
+        <li class="en">L2 A with fields_gap → Brain ≤B?</li>
+        <li class="zh">L2 A 且有缺口 → 大脑 ≤B？</li>
+        <li class="en">Each CN has what_would_falsify?</li>
+        <li class="zh">每个 CN 是否有 what_would_falsify？</li>
+      </ul>
+      <h3><span class="en">Boot order (Brain)</span><span class="zh">启动顺序（大脑）</span></h3>
+      <pre>§0 mode + cache → §C → §9 route → §D Step0 → §M cards
+→ Steps 1–5 → §H L2 → §H.6 re-grade → §6/§10 → §8 out</pre>
+    </section>
+
+    <div class="footer">
+      <span class="en">Finance-Master Technical Handbook v4.6.8 · Single orchestrator · US equities · Grok-native · IBKR research-only<br/>
+      Supersedes handbook v4.3 · Bilingual offline interactive document</span>
+      <span class="zh">Finance-Master 完整技术手册 v4.6.8 · 单一编排 · 美股 · Grok 原生 · IBKR 仅研究<br/>
+      取代手册 v4.3 · 中英双语离线交互文档</span>
+    </div>
+  </main>
+</div>
+<script>
+(function () {
+  const html = document.documentElement;
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('navToggle');
+  const search = document.getElementById('search');
+  const content = document.getElementById('content');
+  const STORAGE_KEY = 'fm-handbook-lang-v468';
+
+  function setLang(lang) {
+    html.setAttribute('lang', lang === 'zh' ? 'zh' : 'en');
+    document.getElementById('langEn').classList.toggle('active', lang === 'en');
+    document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+    const m = document.getElementById('langToggleMobile');
+    if (m) m.textContent = lang === 'en' ? '中文' : 'EN';
+    if (search) {
+      search.placeholder = lang === 'zh' ? search.dataset.phZh : search.dataset.phEn;
+    }
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+    document.title = lang === 'zh'
+      ? 'Finance-Master · 完整技术手册 v4.6.8'
+      : 'Finance-Master · Technical Handbook v4.6.8';
+  }
+
+  function currentLang() {
+    return html.getAttribute('lang') === 'zh' ? 'zh' : 'en';
+  }
+
+  // init lang
+  let initial = 'en';
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'zh' || saved === 'en') initial = saved;
+    else if ((navigator.language || '').toLowerCase().startsWith('zh')) initial = 'zh';
+  } catch (e) {}
+  setLang(initial);
+
+  document.getElementById('langEn').addEventListener('click', () => setLang('en'));
+  document.getElementById('langZh').addEventListener('click', () => setLang('zh'));
+  const mbtn = document.getElementById('langToggleMobile');
+  if (mbtn) mbtn.addEventListener('click', () => setLang(currentLang() === 'en' ? 'zh' : 'en'));
+
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.nav a').forEach(a => {
+    a.addEventListener('click', () => sidebar.classList.remove('open'));
+  });
+
+  // Tabs
+  document.querySelectorAll('[data-tabs]').forEach(group => {
+    const btns = group.querySelectorAll('.tab-btn');
+    const root = group.parentElement;
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-tab');
+        btns.forEach(b => b.classList.toggle('active', b === btn));
+        root.querySelectorAll('.tab-panel').forEach(p => {
+          p.classList.toggle('active', p.getAttribute('data-panel') === id);
+        });
+      });
+    });
+  });
+
+  // Active nav on scroll
+  const links = [...document.querySelectorAll('.nav a')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const setActive = () => {
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top <= 100) current = s;
+    }
+    if (!current) return;
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current.id));
+  };
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  // Search (visible language only)
+  let t = null;
+  if (search) {
+    search.addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        const q = search.value.trim();
+        content.querySelectorAll('mark[data-q]').forEach(m => {
+          const p = m.parentNode;
+          p.replaceChild(document.createTextNode(m.textContent), m);
+          p.normalize();
+        });
+        if (q.length < 2) return;
+        const lang = currentLang();
+        const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, {
+          acceptNode(node) {
+            if (!node.parentElement) return NodeFilter.FILTER_REJECT;
+            const el = node.parentElement;
+            const tag = el.tagName;
+            if (['SCRIPT','STYLE','INPUT','BUTTON'].includes(tag)) return NodeFilter.FILTER_REJECT;
+            // skip hidden language
+            if (el.closest('.' + (lang === 'en' ? 'zh' : 'en'))) return NodeFilter.FILTER_REJECT;
+            if (!node.nodeValue.toLowerCase().includes(q.toLowerCase())) return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        });
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        const re = new RegExp(q.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'), 'ig');
+        nodes.forEach(node => {
+          const frag = document.createDocumentFragment();
+          let last = 0;
+          const text = node.nodeValue;
+          text.replace(re, (match, offset) => {
+            if (offset > last) frag.appendChild(document.createTextNode(text.slice(last, offset)));
+            const mark = document.createElement('mark');
+            mark.dataset.q = '1';
+            mark.textContent = match;
+            frag.appendChild(mark);
+            last = offset + match.length;
+          });
+          if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+          node.parentNode.replaceChild(frag, node);
+        });
+        const first = content.querySelector('mark[data-q]');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 180);
+    });
+  }
+})();
+</script>
+</body>
+</html>

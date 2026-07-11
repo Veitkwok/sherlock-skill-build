@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Finance-Master · 完整技术手册 v4.3</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+@page {
+size: A4;
+margin: 2.5cm 2cm 2.5cm 2cm;
+@top-center {
+content: "Finance-Master · 完整技术手册 v4.3";
+font-size: 8pt;
+color: #999;
+font-family: "PingFang SC", "Heiti SC", sans-serif;
+}
+@bottom-center {
+content: "— " counter(page) " —";
+font-size: 8pt;
+color: #999;
+}
+}
+@page :first {
+@top-center { content: none; }
+}
+body {
+font-family: "PingFang SC", "Heiti SC", "Helvetica Neue", Arial, sans-serif;
+font-size: 10.5pt;
+line-height: 1.75;
+color: #1a1a1a;
+}
+
+h1 {
+font-size: 22pt;
+color: #0d1b2a;
+border-bottom: 3px solid #1b4f8a;
+padding-bottom: 6pt;
+margin-top: 36pt;
+margin-bottom: 18pt;
+page-break-before: always;
+}
+h1:first-of-type {
+page-break-before: avoid;
+font-size: 26pt;
+border-bottom: 4px solid #1b4f8a;
+text-align: center;
+margin-top: 60pt;
+}
+h2 {
+font-size: 15pt;
+color: #1b4f8a;
+border-bottom: 1px solid #c0d0e0;
+padding-bottom: 4pt;
+margin-top: 28pt;
+margin-bottom: 12pt;
+}
+h3 {
+font-size: 12pt;
+color: #2a6cb6;
+margin-top: 20pt;
+margin-bottom: 8pt;
+}
+h4 {
+font-size: 11pt;
+color: #3a7cc6;
+margin-top: 14pt;
+margin-bottom: 6pt;
+}
+
+a {
+color: #1b4f8a;
+text-decoration: none;
+}
+
+code {
+font-family: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+font-size: 8.5pt;
+background: #f4f6f9;
+padding: 1pt 4pt;
+border-radius: 3pt;
+}
+pre {
+background: #f4f6f9;
+border-left: 3px solid #1b4f8a;
+padding: 10pt 14pt;
+font-size: 8pt;
+line-height: 1.5;
+overflow-x: auto;
+margin: 10pt 0;
+}
+pre code {
+background: none;
+padding: 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 12pt 0;
+font-size: 9pt;
+}
+thead {
+background: #1b4f8a;
+color: white;
+}
+th {
+padding: 6pt 10pt;
+text-align: left;
+font-weight: 600;
+}
+td {
+padding: 5pt 10pt;
+border-bottom: 1px solid #e0e6ed;
+}
+tr:nth-child(even) td {
+background: #f8f9fb;
+}
+
+blockquote {
+border-left: 3px solid #1b4f8a;
+background: #f0f4f8;
+margin: 12pt 0;
+padding: 8pt 16pt;
+color: #2d3a4a;
+font-style: italic;
+}
+
+hr {
+border: none;
+border-top: 1px solid #d0d8e0;
+margin: 20pt 0;
+}
+
+nav#TOC {
+page-break-after: always;
+margin-top: 40pt;
+}
+nav#TOC h2 {
+font-size: 18pt;
+border: none;
+color: #0d1b2a;
+}
+nav#TOC ul {
+list-style: none;
+padding-left: 0;
+}
+nav#TOC li {
+margin: 4pt 0;
+}
+nav#TOC a {
+color: #2a6cb6;
+text-decoration: none;
+font-size: 10pt;
+}
+
+strong {
+color: #0d1b2a;
+}
+
+body {
+counter-reset: h2-counter;
+}
+h2 {
+counter-reset: h3-counter;
+}
+h2::before {
+counter-increment: h2-counter;
+content: "§" counter(h2-counter) " ";
+color: #1b4f8a;
+}
+h3::before {
+counter-increment: h3-counter;
+content: counter(h2-counter) "." counter(h3-counter) " ";
+color: #2a6cb6;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Finance-Master · 完整技术手册 v4.3</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#概述与架构" id="toc-概述与架构">00 · 概述与架构</a>
+<ul>
+<li><a href="#项目缘起" id="toc-项目缘起">§1 项目缘起</a></li>
+<li><a href="#三层架构模型" id="toc-三层架构模型">§2
+三层架构模型</a></li>
+<li><a href="#目录结构" id="toc-目录结构">§3 目录结构</a></li>
+<li><a href="#双模式设计" id="toc-双模式设计">§4 双模式设计</a></li>
+<li><a href="#安全架构" id="toc-安全架构">§5 安全架构</a></li>
+<li><a href="#一次典型请求的完整路径12-跳" id="toc-一次典型请求的完整路径12-跳">§1 一次典型请求的完整路径（12
+跳）</a></li>
+<li><a href="#决策树-v2.1-完整版" id="toc-决策树-v2.1-完整版">§2 §9
+决策树 v2.1 · 完整版</a></li>
+<li><a href="#安全否决链-完整执行顺序" id="toc-安全否决链-完整执行顺序">§3 安全否决链 · 完整执行顺序</a></li>
+<li><a href="#模式感知路由hermes-vs-grok" id="toc-模式感知路由hermes-vs-grok">§4 模式感知路由（Hermes vs
+Grok）</a></li>
+<li><a href="#入口与大脑2-个" id="toc-入口与大脑2-个">0. 入口与大脑（2
+个）</a></li>
+<li><a href="#编排器2-个" id="toc-编排器2-个">1. 编排器（2 个）</a></li>
+<li><a href="#uzi-skill-提纯组4-个" id="toc-uzi-skill-提纯组4-个">2.
+UZI-Skill 提纯组（4 个）</a></li>
+<li><a href="#通用工具组16-个" id="toc-通用工具组16-个">3.
+通用工具组（16 个）</a></li>
+<li><a href="#平台阅读器组6-个-hermes-专用-grok-降级" id="toc-平台阅读器组6-个-hermes-专用-grok-降级">4. 平台阅读器组（6 个 ·
+Hermes 专用 · Grok 降级）</a></li>
+<li><a href="#已删除-skill-存档4-个-2026-06-28" id="toc-已删除-skill-存档4-个-2026-06-28">5. 已删除 Skill 存档（4 个 ·
+2026-06-28）</a></li>
+<li><a href="#用例-1-美股深度分析标准路径" id="toc-用例-1-美股深度分析标准路径">用例 1 ·
+美股深度分析（标准路径）</a></li>
+<li><a href="#用例-2-高风险快涨标的扫描链式联动" id="toc-用例-2-高风险快涨标的扫描链式联动">用例 2 ·
+高风险快涨标的扫描（链式联动）</a></li>
+<li><a href="#用例-3-杀猪盘拦截安全优先" id="toc-用例-3-杀猪盘拦截安全优先">用例 3 ·
+杀猪盘拦截（安全优先）</a></li>
+<li><a href="#用例-4-单维度工具估值分析" id="toc-用例-4-单维度工具估值分析">用例 4 ·
+单维度工具（估值分析）</a></li>
+<li><a href="#用例-5-saas-估值压缩分析兜底路由" id="toc-用例-5-saas-估值压缩分析兜底路由">用例 5 · SaaS
+估值压缩分析（兜底路由）</a></li>
+<li><a href="#用例-6-日内冲高分析" id="toc-用例-6-日内冲高分析">用例 6 ·
+日内冲高分析</a></li>
+<li><a href="#用例总结" id="toc-用例总结">用例总结</a></li>
+<li><a href="#finance-master-auditor-运维守护者" id="toc-finance-master-auditor-运维守护者">§1 finance-master-auditor ·
+运维守护者</a></li>
+<li><a href="#版本演进史" id="toc-版本演进史">§2 版本演进史</a></li>
+<li><a href="#cron-job-状态" id="toc-cron-job-状态">§3 Cron Job
+状态</a></li>
+<li><a href="#文件清单" id="toc-文件清单">§4 文件清单</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="概述与架构">00 · 概述与架构</h1>
+<hr />
+<h2 id="项目缘起">§1 项目缘起</h2>
+<p>Finance-Master 源于一个朴素的问题：<strong>如何让 AI Agent
+像人类分析师一样思考？</strong></p>
+<p>市面上有大量金融分析 tool：一个帮你查 PE、一个帮你跑
+DCF、一个帮你爬研报。但它们各自为政——用户需要记住 20 个 tool
+的名字和触发条件，Agent 不知道什么时候该用哪个。</p>
+<p>Finance-Master 的答案是：<strong>不要 20 个 tool，要 1 个 brain + 29
+个执行单元</strong>。</p>
+<p>它不是一个金融分析
+skill。它是一个<strong>金融分析操作系统的内核</strong>。</p>
+<hr />
+<h2 id="三层架构模型">§2 三层架构模型</h2>
+<pre><code>                                 用户请求
+                                    │
+┌───────────────────────────────────┼───────────────────────────────────┐
+│  L0 · 薄层入口                      │                                   │
+│  finance-master/SKILL.md           │  三层语义触发                     │
+│                                    │  ──→ 加载 L1 大脑                │
+├───────────────────────────────────┼───────────────────────────────────┤
+│  L1 · 推理大脑                     │                                   │
+│  sherlock-finance v2.1             │  五步消除引擎                     │
+│  13 个协议 · §9 决策树 v2.1        │  ──→ 路由到 L2 执行单元           │
+│                                    │  ──→ 安全否决（§6 + trap-detector）│
+├───────────────────────────────────┼───────────────────────────────────┤
+│  L2 · 执行层                       │                                   │
+│  ┌─────────────┬──────────────────┤                                   │
+│  │ 编排器      │ 工具层 (21)      │  按需加载                          │
+│  │ x-advanced  │ finance-skills/  │  并行执行                          │
+│  │ serenity    │ UZI-Skill/ (4)   │  结果汇聚                          │
+│  └─────────────┴──────────────────┤                                   │
+└───────────────────────────────────┴───────────────────────────────────┘</code></pre>
+<h3 id="l0-薄层入口">L0 · 薄层入口</h3>
+<p><code>finance-master/SKILL.md</code>
+是唯一入口。它的工作只有一件：<strong>判断是否触发金融分析，然后委托给
+L1</strong>。</p>
+<p>三层触发检测：</p>
+<pre><code>L1 层：股票代码匹配
+  ├── 美股 ticker（AAPL, TSLA, PLTR...）
+  ├── 中文名 + 代码（&quot;苹果 AAPL&quot;）
+  └── 行业 + 代码暗示
+
+L2 层：金融意图语义
+  ├── &quot;分析&quot;&quot;估值&quot;&quot;财报&quot;&quot;买入&quot;&quot;做空&quot;
+  ├── &quot;跌了&quot;&quot;涨了&quot;&quot;走势&quot;&quot;目标价&quot;
+  └── &quot;深度&quot;&quot;全面&quot;&quot;帮我看看&quot;
+
+L3 层：对话上下文追问
+  ├── 前一句刚分析了一只股票
+  ├── 用户追问&quot;那另一只呢&quot;
+  └── 前文有&quot;我持仓了X&quot;</code></pre>
+<h3 id="l1-推理大脑">L1 · 推理大脑</h3>
+<p><code>sherlock-finance/SKILL.md</code>（v2.1 · 523 行 · 13
+个协议）是整个系统的大脑。它不执行具体的数据获取或计算——它做的是<strong>推理、路由、否决</strong>。</p>
+<p>核心能力：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>协议</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>§1 五步消除引擎</td>
+<td>通用推理框架：审查→展开→证伪→收敛→暴露</td>
+</tr>
+<tr>
+<td>§2 通用五层分析</td>
+<td>去噪 / Cui Bono / 叙事审讯 / 反事实检验 / 置信度分级</td>
+</tr>
+<tr>
+<td>§3 公司深度穿透</td>
+<td>反伪装协议：烟雾弹测试 / 装卸区三角验证 / 代理人动机追踪</td>
+</tr>
+<tr>
+<td>§5 美股操作协议</td>
+<td>标的分类 / 期权信号 / 做空挤压 / 财报交易 / 仓位管理</td>
+</tr>
+<tr>
+<td>§6 否决条件</td>
+<td>安全否决（trap-detector 优先）+ 认知否决</td>
+</tr>
+<tr>
+<td>§7 跨市场信号</td>
+<td>美债/美元/原油/VIX/比特币联动</td>
+</tr>
+<tr>
+<td>§8 输出模板</td>
+<td>金融专用输出格式</td>
+</tr>
+<tr>
+<td><strong>§9 决策树 v2.1</strong></td>
+<td>协议选择 + 子 skill 路由（100% 覆盖）</td>
+</tr>
+<tr>
+<td>§10 直接判断</td>
+<td>“现在能买吗”三层回答</td>
+</tr>
+<tr>
+<td>§12 日内协议</td>
+<td>5 分钟 K 线波段识别 + 放量阈值 + 目标价判断</td>
+</tr>
+<tr>
+<td>§13 短期研判</td>
+<td>1-4 周走势分析 + 技术定位 + 催化剂日历 + 情景矩阵</td>
+</tr>
+</tbody>
+</table>
+<h3 id="l2-执行层">L2 · 执行层</h3>
+<p>29 个独立 skill，分为 4 个集群：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>集群</th>
+<th>数量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>编排器</strong></td>
+<td>2</td>
+<td>x-advanced-research（X 信号发现），serenity-skill（供应链瓶颈）</td>
+</tr>
+<tr>
+<td><strong>通用工具</strong></td>
+<td>16</td>
+<td>估值、财报、技术、期权、流动性、情绪、数据获取</td>
+</tr>
+<tr>
+<td><strong>小众工具</strong></td>
+<td>5</td>
+<td>ETF、分析师预期、相关性、SaaS 估值、地缘/海峡</td>
+</tr>
+<tr>
+<td><strong>平台阅读器</strong></td>
+<td>6</td>
+<td>Twitter/Discord/Telegram/LinkedIn/TradingView/通用（Hermes
+专用）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="目录结构">§3 目录结构</h2>
+<pre><code>finance-master/
+├── SKILL.md                  L0 入口 · 三层语义触发
+├── VERSION                   版本号（由 auditor 管理）
+│
+├── sherlock-finance/         L1 大脑
+│   └── SKILL.md             v2.1 · 523 行 · 13 个协议
+│
+├── x-advanced-research/      L2 · X 信号发现编排器
+│   ├── SKILL.md             多 Agent 调度 + 输出模板
+│   ├── VERSION
+│   └── references/          4 个策略参考文档
+│
+├── serenity-skill/           L2 · 供应链瓶颈研究
+│   ├── SKILL.md             8 步瓶颈研究框架 + handoff 协议
+│   ├── LICENSE              MIT
+│   ├── assets/              2 个模板文件
+│   ├── evals/               1 个测试用例
+│   ├── examples/            3 个 Demo
+│   └── references/          9 个方法论文档
+│       └── bottleneck-scoring.md   8 因子加权评分
+│
+├── finance-skills/           L2 · 21 个金融工具
+│   ├── company-valuation/   DCF / 可比 / SOTP
+│   ├── yfinance-data/       Yahoo Finance 数据（主源）
+│   ├── funda-data/          Funda AI（备源 · 11 数据频道）
+│   ├── earnings-preview/    财报前瞻
+│   ├── earnings-recap/      财报解读
+│   ├── estimate-analysis/   分析师预期修正
+│   ├── sepa-strategy/       Minervini SEPA 选股
+│   ├── options-payoff/      期权盈亏图
+│   ├── stock-liquidity/     流动性分析
+│   ├── stock-correlation/   跨股相关性
+│   ├── finance-sentiment/   社交情绪
+│   ├── etf-premium/         ETF 溢价/折价
+│   ├── saas-valuation-compression/  SaaS 估值压缩
+│   ├── startup-analysis/    创业公司三维分析
+│   ├── hormuz-strait/       霍尔木兹海峡地缘风险
+│   ├── twitter-reader/      X/Twitter 阅读（Hermes 专用）
+│   ├── discord-reader/      Discord 阅读（Hermes 专用）
+│   ├── telegram-reader/     Telegram 阅读（Hermes 专用）
+│   ├── linkedin-reader/     LinkedIn 阅读（Hermes 专用）
+│   ├── tradingview-reader/  TradingView 阅读（Hermes 专用）
+│   └── opencli-reader/      通用网页读取（Hermes 专用）
+│
+└── UZI-Skill/               L2 · 4 个提纯版分析工具
+    ├── deep-analysis/       ★ 22 维公司深度穿透 + 36 大师评审
+    │   ├── SKILL.md         v4.0 agent 驱动版
+    │   └── references/      12 个方法论文档（含弃用声明）
+    ├── investor-panel/      65 人大佬评审团（v4.0 agent 驱动）
+    │   ├── SKILL.md         9 流派 · group a~i
+    │   └── references/      10 个分组参考 + 语料库
+    ├── lhb-analyzer/        龙虎榜游资分析（v4.0 agent 驱动 · A 股）
+    └── trap-detector/       杀猪盘/荐股陷阱检测器</code></pre>
+<p><strong>文件统计</strong>：29 个 SKILL.md + 85 个 references + 1 个
+LICENSE。零 Python、零 JSON、零 YAML、零空目录。</p>
+<hr />
+<h2 id="双模式设计">§4 双模式设计</h2>
+<p>Finance-Master 同时兼容两个运行环境：</p>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 48%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Hermes Agent</th>
+<th>Grok 网页版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据获取</td>
+<td>MCP 工具链（yfinance / funda / opencli）</td>
+<td>web search + X search</td>
+</tr>
+<tr>
+<td>平台阅读器</td>
+<td>✅ 6 个 opencli reader 可用</td>
+<td>❌ 不可用 → 自动降级为 web/search</td>
+</tr>
+<tr>
+<td>X 社交信号</td>
+<td>twitter-reader（opencli）</td>
+<td>x-advanced-research（X search 原生）</td>
+</tr>
+<tr>
+<td>文件导入</td>
+<td>Hermes 自动扫描 skills/</td>
+<td>手动拖入 Skill 面板</td>
+</tr>
+<tr>
+<td>分析质量</td>
+<td>完全一致（方法论相同）</td>
+<td>完全一致（方法论相同）</td>
+</tr>
+</tbody>
+</table>
+<p>模式感知由 sherlock-finance §9 决策树中的 <strong>MODE CHECK</strong>
+段处理。Agent 在路由前判断当前环境，自动选择可用的数据获取路径。</p>
+<hr />
+<h2 id="安全架构">§5 安全架构</h2>
+<p>Finance-Master 有三层安全闸门，依次执行：</p>
+<pre><code>第一层 · trap-detector
+  ├── 触发：&quot;朋友推荐/群里说/老师带/内幕消息/小红书/抖音&quot;
+  └── 命中 → 终止全流程，输出杀猪盘报告
+
+第二层 · §6 认知否决
+  ├── 宏观：VIX &gt; 30 / 美联储讲话不确定性 / 美元剧烈波动
+  ├── 标的：Cui Bono 无受益方 / 流动性不足 / 反事实模板未填
+  └── 认知：报复性交易 / 锚定偏见 / 确认偏误
+
+第三层 · §10 直接判断
+  ├── 本金安全吗？（明确&quot;不&quot;或&quot;有条件地&quot;）
+  ├── 催化剂逻辑对吗？（列表 + 时间窗口）
+  └── 反事实检验（3-4 条可观测信号 + 时间窗口）</code></pre>
+<p>三层全部通过，才输出买入建议。任何一层否决，直接终止。</p>
+<hr />
+<p><em>下一篇: <a href="01-runtime-flow.md">01
+运行流程与决策逻辑</a></em> # 01 · 运行流程与决策逻辑</p>
+<hr />
+<h2 id="一次典型请求的完整路径12-跳">§1 一次典型请求的完整路径（12
+跳）</h2>
+<p>以用户输入
+<code>&quot;ARK 又在加仓 PLTR，帮我深度分析一下，现在值得买吗？&quot;</code>
+为例。</p>
+<hr />
+<h3 id="跳-1-入口拦截">跳 1 · 入口拦截</h3>
+<p>Hermes 扫描
+<code>available_skills</code>。<code>finance-master</code> 的
+description 命中语义检测：</p>
+<pre><code>L1 信号: &quot;PLTR&quot; → 美股 ticker ✓
+L2 信号: &quot;深度分析&quot; + &quot;值得买&quot; → 金融分析意图 ✓
+L3 信号: 无前置上下文，但 L1+L2 都命中 → 触发 ✓</code></pre>
+<p>→ 加载 <code>finance-master/SKILL.md</code>（L0 薄层入口）。</p>
+<hr />
+<h3 id="跳-2-l0-分发">跳 2 · L0 分发</h3>
+<p>L0 入口只做一件事：判路由条件，然后委托。</p>
+<pre><code>触发规则解析：
+├── ticker 存在？→ 是 PLTR
+├── 金融意图？→ &quot;深度分析&quot;+&quot;值得买&quot;
+└── → 委托 sherlock-finance（L1 大脑）</code></pre>
+<hr />
+<h3 id="跳-3-l1-大脑接管">跳 3 · L1 大脑接管</h3>
+<p><code>sherlock-finance/SKILL.md</code> 被加载。进入 §2
+五步消除引擎初始化。</p>
+<p>同时并行执行 §6 安全预检：</p>
+<pre><code>§6 安全否决:
+├── &quot;ARK 加仓&quot; 来源？→ 用户从公开渠道观察到的信息
+│   → 不是&quot;朋友推荐/群里说&quot; → trap-detector 不触发 ✓
+├── VIX 检查 → 待运行时数据确认
+├── 流动性检验 → 待 Step 2 执行
+└── 继续</code></pre>
+<hr />
+<h3 id="跳-4-9-决策树路由">跳 4 · §9 决策树路由</h3>
+<p>§9 分析请求类型：</p>
+<pre><code>用户请求: &quot;ARK 加仓 PLTR · 深度分析 · 值得买&quot;
+│
+├── ❌ 安全检测？→ 非杀猪盘信号
+├── ❌ 找大涨标的？→ 用户已有具体 ticker
+├── ✅ 具体股票深度分析/买入判断？
+│   ├── 22 维 + 估值 + 评审 → deep-analysis
+│   ├── 辅助: company-valuation + yfinance-data
+│   ├── 推理: §2 + §5 + §6
+│   └── 追问&quot;现在能买？&quot; → §10 直接判断协议
+│
+├── ❌ 其他分支不匹配
+└── → deep-analysis 为主路径</code></pre>
+<hr />
+<h3 id="跳-5-并行加载">跳 5 · 并行加载</h3>
+<p>Agent 同时加载 4 个子 skill：</p>
+<pre><code>deep-analysis/SKILL.md      → 22 维穿透框架
+company-valuation/SKILL.md   → DCF + 可比估值方法
+yfinance-data/SKILL.md       → 行情/财报数据获取
+finance-sentiment/SKILL.md   → Reddit/X 情绪信号</code></pre>
+<hr />
+<h3 id="跳-6-数据采集">跳 6 · 数据采集</h3>
+<p>Agent 按双模式策略获取数据：</p>
+<pre><code>Hermes 模式:
+├── yfinance → PLTR 股价/财报/估值历史
+├── MCP funda-data → 机构持仓/期权数据
+├── web_search → &quot;PLTR Q2 2026 earnings catalyst&quot;
+├── X search → &quot;PLTR ARK&quot; 讨论热度
+└── finance-sentiment → Reddit WallStreetBets 情绪
+
+Grok 模式:
+├── web search → 同上（yfinance 替换为 web 搜索金融数据）
+├── X search → 同上（x-advanced-research 编排）
+└── web search → 替代所有 opencli reader</code></pre>
+<hr />
+<h3 id="跳-7-22-维穿透分析">跳 7 · 22 维穿透分析</h3>
+<p>Agent 按 <code>deep-analysis/SKILL.md</code> v4.0 执行：</p>
+<pre><code>Dim 0-5  基础信息 + 财报 + K线 + 宏观 + 同行       → 已完成
+Dim 6-10 供应链 + 景气 + 原材料 + 期货 + 估值       → 已完成
+Dim 11-15 治理 + 资金面 + 政策 + 专利 + 事件        → 处理中
+Dim 16-19 龙虎榜 + 舆情 + 杀猪盘 + 实盘赛          → 美股跳过 Dim 16/19
+Dim 20-22 机构建模: DCF + Comps + IC Memo         → 估值层</code></pre>
+<hr />
+<h3 id="跳-8-36-大师框架评审">跳 8 · 36 大师框架评审</h3>
+<p>从 <code>investor-frameworks.md</code> 加载 36
+位美股大师方法论，逐一评分：</p>
+<pre><code>巴菲特:     ROE&gt;15%? ✓  FCF稳定? ✓  Moat? ✓  → bullish 82
+木头姐:     颠覆性创新? ✓  S曲线位置? 早期 → bullish 88
+Dalio:      宏观周期位置? → neutral 65
+...
+汇总: 24 bullish / 8 neutral / 4 bearish → panel_consensus 67%</code></pre>
+<hr />
+<h3 id="跳-9-估值建模">跳 9 · 估值建模</h3>
+<pre><code>DCF:
+├── Stage1 growth: 22% (政府AI合同驱动)
+├── Stage2 growth: 12%
+├── Terminal: 3%
+├── WACC: 9.5%
+└── → 公允价值 $32.50
+
+可比估值:
+├── 同行: SNOW, MDB, DDOG
+├── EV/Revenue 中位数: 12x
+└── → 公允价值 $28-$35</code></pre>
+<hr />
+<h3 id="跳-10-10-直接判断值得买">跳 10 · §10 直接判断（“值得买？”）</h3>
+<pre><code>### 1. 本金安全吗？
+PLTR 日均成交 $800M+，流动性充裕。当前价格在 52周高点回撤 15%，
+非追高风险区。结论: 有条件安全。
+
+### 2. 催化剂逻辑对吗？
+- 确认催化剂: ARK 持续加仓（公开数据） + Q2 财报（8月初）
+- 核心变量: 政府AI合同增速（Q1增速 34%，Q2预期 28-35%）
+- 变量近期变化: 美国政府 FY2026 AI预算 +12% → 正面
+
+### 3. 反事实检验
+1. Q2政府合同增速 &lt; 20% → 催化剂失效（观测窗口: 8月财报）
+2. ARK 连续2周减仓 &gt;5% → 机构信心动摇（每周五观测）
+3. 竞品 SNOW 拿下重大政府合同 → 护城河受损（随时观测）
+4. PLTR 跌破 $22 → 技术结构破坏（日线观测）
+
+### 结论
+&quot;PLTR 在政府AI合同加速 + ARK加仓双重催化剂下，当前回调位有基本面支撑。
+置信度 B。需 Q2 财报确认合同增速。&quot;</code></pre>
+<hr />
+<h3 id="跳-11-6-最终否决">跳 11 · §6 最终否决</h3>
+<pre><code>VIX 18.2 (&lt;30) ✓
+Cui Bono: ARK 是明确受益方 + 行为前兆（加仓）✓
+反事实模板: 已填写 4 条具象信号 ✓
+认知状态: 非报复性交易 ✓
+→ 通过</code></pre>
+<hr />
+<h3 id="跳-12-输出">跳 12 · 输出</h3>
+<p>按 §8 金融专用输出模板格式化，交付用户。</p>
+<hr />
+<h2 id="决策树-v2.1-完整版">§2 §9 决策树 v2.1 · 完整版</h2>
+<pre><code>┌── MODE CHECK ──────────────────────────────────────┐
+│ Hermes : opencli reader 可用                        │
+│ Grok   : reader 全部不可用 → web/X search 替代     │
+└────────────────────────────────────────────────────┘
+
+用户请求
+├── 🔴 安全检测优先（先于所有分支）
+│   ├── 涉及&quot;朋友推荐/群里说/老师带/内幕&quot;? → trap-detector
+│   └── 检出杀猪盘 → 终止，不进入后续分支
+│
+├── 高风险快涨标的捕捉？
+│   └── ① x-advanced-research → ② serenity-skill → ③ deep-analysis
+│
+├── 具体股票深度分析/买入判断？
+│   ├── 22 维 + 估值 + 评审 → deep-analysis
+│   ├── 评审团投票（65 人完整版） → investor-panel
+│   └── 龙虎榜/游资分析（A 股） → lhb-analyzer
+│
+├── 单维度分析（非深度）？
+│   ├── 估值/DCF/目标价 → company-valuation
+│   ├── 财报解读 → earnings-recap
+│   ├── 财报前瞻 → earnings-preview
+│   ├── 技术面/SEPA → sepa-strategy
+│   ├── 期权/盈亏图 → options-payoff
+│   └── 流动性 → stock-liquidity
+│
+├── 小众分析工具？（兜底路由）
+│   ├── ETF 溢价/折价 → etf-premium
+│   ├── 分析师预期修正 → estimate-analysis
+│   ├── 跨股相关性 → stock-correlation
+│   ├── SaaS 估值压缩 → saas-valuation-compression
+│   ├── 创业公司/YC → startup-analysis
+│   └── 地缘/海峡 → hormuz-strait
+│
+├── 数据获取？
+│   ├── 行情/财务 → yfinance → funda → web search
+│   ├── 社交情绪 → finance-sentiment
+│   ├── Hermes: reader → twitter/discord/telegram/linkedin/tradingview/opencli
+│   └── Grok:  全部降级为 web search + X search
+│
+├── 基本面深度调研（非估值向）？
+│   └── §3 反伪装 + §2 Cui Bono + §2 叙事审讯
+│
+├── 跨市场宏观？
+│   └── §2 + §7
+│
+└── 纯方向性判断（无标的）？
+    └── §2 L3 叙事审讯 + §2 L4 反事实检验</code></pre>
+<hr />
+<h2 id="安全否决链-完整执行顺序">§3 安全否决链 · 完整执行顺序</h2>
+<pre><code>Step 0 · trap-detector 预检（§9 第一分支）
+  ├── 触发词：&quot;朋友推荐/群里说/老师带/稳赚/必涨/内幕/小红书/抖音&quot;
+  ├── 命中 → 加载 trap-detector → 检测八大杀猪盘信号
+  └── 任一信号命中 → 终止，输出 trap-detector 报告
+
+Step 1 · §6 宏观否决
+  ├── VIX &gt; 30 且上升？→ 不入场
+  ├── 美联储当周重大讲话 + 市场分歧？→ 不入场
+  └── 美元 10 日升值 &gt; 3%？→ 不入场
+
+Step 2 · §6 标的否决
+  ├── Cui Bono 找不到受益方？→ 不入场
+  ├── 流动性检验未通过？→ 不入场
+  └── 反事实模板未填写？→ 不入场
+
+Step 3 · §6 认知否决
+  ├── 动机是&quot;想找回损失&quot;？→ 不入场
+  ├── 对已放弃标的重新产生兴趣？→ 不入场
+  └── 对结论有强烈情绪倾向且找不到反面论据？→ 不入场
+
+Step 4 · §10 直接判断
+  ├── 本金安全？→ 明确回答
+  ├── 催化剂逻辑？→ 条件分析
+  └── 反事实检验？→ 可观测信号 + 时间窗口</code></pre>
+<hr />
+<h2 id="模式感知路由hermes-vs-grok">§4 模式感知路由（Hermes vs
+Grok）</h2>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 36%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr>
+<th>子 skill</th>
+<th>Hermes (MCP)</th>
+<th>Grok (web+X)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>twitter-reader</td>
+<td>✅ opencli 直接读 X</td>
+<td>❌ → x-advanced-research (X search 原生)</td>
+</tr>
+<tr>
+<td>discord-reader</td>
+<td>✅ opencli</td>
+<td>❌ → web search</td>
+</tr>
+<tr>
+<td>telegram-reader</td>
+<td>✅ CLI</td>
+<td>❌ → web search</td>
+</tr>
+<tr>
+<td>linkedin-reader</td>
+<td>✅ opencli</td>
+<td>❌ → web search</td>
+</tr>
+<tr>
+<td>tradingview-reader</td>
+<td>✅ opencli</td>
+<td>❌ → web search</td>
+</tr>
+<tr>
+<td>opencli-reader</td>
+<td>✅ opencli</td>
+<td>❌ → web search</td>
+</tr>
+<tr>
+<td>yfinance-data</td>
+<td>✅ MCP</td>
+<td>❌ → web search 替代</td>
+</tr>
+<tr>
+<td>funda-data</td>
+<td>✅ MCP</td>
+<td>❌ → web search 替代</td>
+</tr>
+<tr>
+<td>其他 21 个 skill</td>
+<td>✅ 正常加载</td>
+<td>✅ 正常加载（方法论相同）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>下一篇: <a href="02-subskill-catalog.md">02 子 Skill
+完整名录</a></em> # 02 · 子 Skill 完整名录</p>
+<blockquote>
+<p>29 个子 skill · 按集群分组 · v4.3</p>
+</blockquote>
+<hr />
+<h2 id="入口与大脑2-个">0. 入口与大脑（2 个）</h2>
+<h3 id="finance-masterskill.md">finance-master/SKILL.md</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L0 · 薄层入口</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>3KB</td>
+</tr>
+<tr>
+<td>触发</td>
+<td>三层语义检测（L1 代码格式 / L2 金融意图 / L3 对话上下文）</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>判断请求是否为金融分析 → 委托给 sherlock-finance</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>加载 sherlock-finance</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sherlock-finance">sherlock-finance</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L1 · 推理大脑</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>21KB · 523 行</td>
+</tr>
+<tr>
+<td>版本</td>
+<td>v2.1</td>
+</tr>
+<tr>
+<td>协议</td>
+<td>§1-§13（五步引擎 / 五层分析 / 反伪装 / 美股操作 / 否决 / 跨市场 /
+输出模板 / 决策树 / 直接判断 / 日内 / 短期研判）</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>推理框架 + §9 路由 + 安全否决 + 输出标准</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>用户自然语言请求</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>子 skill 加载指令 + 推理结论 + 格式化分析报告</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="编排器2-个">1. 编排器（2 个）</h2>
+<h3 id="x-advanced-research">x-advanced-research</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L2 · X 信号发现编排器</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>12KB</td>
+</tr>
+<tr>
+<td>来源</td>
+<td>本地创建</td>
+</tr>
+<tr>
+<td>触发</td>
+<td>“找大涨标的”“Serenity风格”“扫描美股机会”“X上怎么说”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>多 Agent 调度：X 搜索 → 筛选 ticker → 输出候选列表</td>
+</tr>
+<tr>
+<td>下游</td>
+<td>serenity-skill（瓶颈分析）→ deep-analysis（22 维穿透）</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>搜索主题 / 行业 / 风格描述</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>候选 ticker 列表 + 信号摘要</td>
+</tr>
+<tr>
+<td>Grok 模式</td>
+<td>✅ 原生 X search（核心优势）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="serenity-skill">serenity-skill</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L2 · 供应链瓶颈研究</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>15KB</td>
+</tr>
+<tr>
+<td>来源</td>
+<td>muxuuu/serenity-skill · 已提纯</td>
+</tr>
+<tr>
+<td>触发</td>
+<td>“供应链”“瓶颈”“卡脖子”“chokepoint”“Serenity”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>8 步瓶颈研究框架：识别稀缺层 → 映射供应商 → 分析需求拐点 →
+计算集中度 → 评估扩产难度 → 证据质量评分 → 估值脱节 → 催化剂时间</td>
+</tr>
+<tr>
+<td>联动</td>
+<td>x-advanced-research（接收 ticker 列表）→
+deep-analysis（输出瓶颈股票）</td>
+</tr>
+<tr>
+<td>评分</td>
+<td><code>references/bottleneck-scoring.md</code> · 8 因子加权</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>ticker 列表 或 行业/技术关键词</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>瓶颈排序 + 评分卡 + 推荐标的</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="uzi-skill-提纯组4-个">2. UZI-Skill 提纯组（4 个）</h2>
+<p>所有 4 个 skill 均从原始 <code>wbh604/UZI-Skill</code> 提纯。删除了
+scripts/、personas/、assets/、run.py——改为 Agent 直接推理。</p>
+<h3 id="deep-analysis">deep-analysis</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L2 · 核心分析引擎</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>15KB · v4.0 agent 驱动</td>
+</tr>
+<tr>
+<td>触发</td>
+<td>“深度分析”“全面分析”“帮我看看”“值不值得买”“DCF”“首次覆盖”“IC
+memo”“投委会”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>22 维公司穿透 + DCF/Comps/IC Memo + 36 大师框架评审</td>
+</tr>
+<tr>
+<td>数据获取</td>
+<td>Hermes: MCP 工具链 / Grok: web + X search</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>ticker + 可选分析维度</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>22 维结构化报告 + 估值结论 + 36 人评审投票</td>
+</tr>
+<tr>
+<td>依赖</td>
+<td>company-valuation, yfinance-data, finance-sentiment,
+investor-panel（可选）</td>
+</tr>
+<tr>
+<td>参考</td>
+<td>12 个 references/（methodology docs with deprecation notices）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="investor-panel">investor-panel</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L2 · 评审团</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>5KB · v4.0 agent 驱动</td>
+</tr>
+<tr>
+<td>触发</td>
+<td>“评审团”“大佬怎么看”“投票”“某某会买吗”“投资者怎么看”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>65 位投资者独立评审（9
+大流派：价值/成长/宏观/技术/中国价投/游资/量化/科技领袖/Serenity）</td>
+</tr>
+<tr>
+<td>美股默认</td>
+<td>A-D + G + I 组（24 人）</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>stock data（Agent 已掌握或 deep-analysis 输出）</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>65 个结构化
+Signal（signal/confidence/score/verdict/reasoning/comment） +
+投票统计</td>
+</tr>
+<tr>
+<td>语料库</td>
+<td><code>references/quotes-knowledge-base.md</code>（59KB ·
+真实语录）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lhb-analyzer">lhb-analyzer</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L2 · A 股龙虎榜</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>3KB · v4.0 agent 驱动</td>
+</tr>
+<tr>
+<td>触发</td>
+<td>“龙虎榜”“游资”“谁在买”“席位”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>龙虎榜数据获取 → 游资席位识别 → 射程判断 → 同板块辨识度龙头对比</td>
+</tr>
+<tr>
+<td>注意</td>
+<td>A 股专用。美股请求不会触发</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>A 股代码</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>席位分析 + 游资识别 + 机构 vs 游资博弈 + 板块排名</td>
+</tr>
+</tbody>
+</table>
+<h3 id="trap-detector">trap-detector</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>L2 · 安全层（priority 0）</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>3KB</td>
+</tr>
+<tr>
+<td>触发</td>
+<td>“朋友推荐”“群里说”“老师带”“内幕消息”“小红书”“抖音”“稳赚”“必涨”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>八大杀猪盘信号检测</td>
+</tr>
+<tr>
+<td>优先级</td>
+<td><strong>先于所有其他 skill 执行</strong>（§9 第一分支 + §6
+安全否决优先）</td>
+</tr>
+<tr>
+<td>命中后</td>
+<td>终止全流程，输出杀猪盘报告</td>
+</tr>
+<tr>
+<td>参考</td>
+<td><code>references/eight-signals.md</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="通用工具组16-个">3. 通用工具组（16 个）</h2>
+<h3 id="company-valuation">company-valuation</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“估值”“目标价”“PE”“PB”“ROE”“财报分析”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>DCF 三阶段模型 / 可比公司分析 / SOTP 分拆估值</td>
+</tr>
+<tr>
+<td>依赖</td>
+<td>yfinance-data 或 funda-data</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>公允价值区间 + 安全边际 + 敏感性分析</td>
+</tr>
+<tr>
+<td>参考</td>
+<td><code>references/dcf.md</code>, <code>relative_valuation.md</code>,
+<code>sotp.md</code>, <code>wacc_erp_rates.md</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="yfinance-data">yfinance-data</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“股价”“行情”“k线”“历史数据”“yfinance”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>Yahoo Finance 数据拉取：报价、历史K线、财报、分红、机构持仓</td>
+</tr>
+<tr>
+<td>优先级</td>
+<td>数据获取主源（yfinance → funda → web search）</td>
+</tr>
+<tr>
+<td>仅 Hermes</td>
+<td>MCP 工具链（Grok → web search 替代）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="funda-data">funda-data</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“基本面数据”“财务数据”“funda”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>Funda AI 11 频道数据：基本面 / 市场数据 / 新闻 / 日历 / 期权 /
+供应链 / 招聘 / 备选数据 / 文件 / 研究主题 / Claude Proxy</td>
+</tr>
+<tr>
+<td>优先级</td>
+<td>数据获取备源</td>
+</tr>
+<tr>
+<td>仅 Hermes</td>
+<td>MCP 工具链（Grok → web search 替代）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="earnings-preview">earnings-preview</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“盈利预测”“业绩前瞻”“财报前瞻”“earnings preview”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>财报前前瞻分析：一致预期 vs
+历史超预期率、隐含波动率、期权定价的隐含移动</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>三情景（beat/meet/miss）+ 概率 + 期权策略建议</td>
+</tr>
+</tbody>
+</table>
+<h3 id="earnings-recap">earnings-recap</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“财报解读”“业绩回顾”“beat”“miss”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>财报后分析：实际 vs
+预期对比、收入分解、利润率趋势、管理层指引变化</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>结构化财报解读报告</td>
+</tr>
+</tbody>
+</table>
+<h3 id="estimate-analysis">estimate-analysis</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“分析师预期”“一致预期”“estimate revision”“上调”“下调”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>分析师预期修正趋势追踪：EPS 修正方向、幅度、散度</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>修正趋势图 + 信号（正向修正加速/减速/反转）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sepa-strategy">sepa-strategy</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“SEPA”“Minervini”“VCP”“趋势模板”“Stage分析”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>Mark Minervini SEPA 选股框架：趋势模板、Stage 分析、VCP
+识别、入场规则</td>
+</tr>
+<tr>
+<td>参考</td>
+<td><code>references/entry-rules.md</code>, <code>patterns.md</code>,
+<code>stage-analysis.md</code>, <code>trend-template.md</code>,
+<code>fundamentals.md</code>, <code>market-environment.md</code>,
+<code>position-sizing.md</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="options-payoff">options-payoff</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“期权”“payoff”“到期日”“strike”“Call”“Put”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>期权盈亏图生成 + 希腊字母 + 策略对比</td>
+</tr>
+<tr>
+<td>联动</td>
+<td>§5 期权信号协议（大单检测→基本面验证）</td>
+</tr>
+<tr>
+<td>参考</td>
+<td><code>references/strategies.md</code>, <code>bs_code.md</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="stock-liquidity">stock-liquidity</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“流动性”“买卖价差”“成交量”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>流动性多维度分析：bid-ask spread、日均成交量、Amihud
+非流动性比率、市场深度</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>流动性评级 + 大单冲击成本估算</td>
+</tr>
+</tbody>
+</table>
+<h3 id="stock-correlation">stock-correlation</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“相关性”“同行业”“pair trade”“跟谁走”“联动”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>跨股相关性矩阵：同行业 / 供应链 / 因子暴露</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>相关性热力图 + 高相关标的列表</td>
+</tr>
+</tbody>
+</table>
+<h3 id="finance-sentiment">finance-sentiment</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“情绪”“舆情”“Reddit”“X sentiment”“华尔街讨论”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>Reddit/X/新闻情绪聚合</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>情绪极性 + 讨论量趋势 + 异常信号</td>
+</tr>
+</tbody>
+</table>
+<h3 id="etf-premium">etf-premium</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“ETF”“折溢价”“NAV”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>ETF 溢价/折价 vs NAV 计算 + Gamma Squeeze 检测</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>折溢价率 + 历史分位 + 套利可行性</td>
+</tr>
+</tbody>
+</table>
+<h3 id="saas-valuation-compression">saas-valuation-compression</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“SaaS”“估值压缩”“ARR”“MRR”“Rule of 40”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>SaaS 公司估值压缩/恢复分析：融资轮次估值对比、EV/ARR 倍数追踪</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>估值压缩幅度 + 可比公司倍数表</td>
+</tr>
+</tbody>
+</table>
+<h3 id="startup-analysis">startup-analysis</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“创业分析”“startup”“VC”“天使”“种子轮”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>创业公司三维分析：VC 视角 + CEO 视角 + 求职者视角</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>市场/团队/产品/牵引力/竞品分析</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hormuz-strait">hormuz-strait</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“霍尔木兹海峡”“航运”“地缘”“原油供应中断”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>霍尔木兹海峡通行状态检查 + 航运数据 + 地缘风险评估</td>
+</tr>
+<tr>
+<td>输出</td>
+<td>当前状态 + 风险等级 + 受影响资产类别</td>
+</tr>
+</tbody>
+</table>
+<h3 id="generative-ui-已删除">generative-ui · ❌ 已删除</h3>
+<p>Claude 专用 UI 生成。与美股分析无关。2026-06-28 移除。</p>
+<h3 id="skill-creator-已删除">skill-creator · ❌ 已删除</h3>
+<p>通用 Hermes skill 创建工具。非金融分析。2026-06-28 移除。</p>
+<hr />
+<h2 id="平台阅读器组6-个-hermes-专用-grok-降级">4. 平台阅读器组（6 个 ·
+Hermes 专用 · Grok 降级）</h2>
+<p>所有阅读器依赖 opencli（浏览器自动化）或其他 CLI 工具。在 Grok
+网页版<strong>不可用</strong>，自动降级为 web search + X search。</p>
+<h3 id="twitter-reader">twitter-reader</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“Twitter”“X.com”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>通过 opencli 读取 X/Twitter 内容</td>
+</tr>
+<tr>
+<td>Grok 替代</td>
+<td>x-advanced-research（X search 原生）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="discord-reader">discord-reader</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“Discord”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>通过 opencli 读取 Discord 服务器消息</td>
+</tr>
+<tr>
+<td>Grok 替代</td>
+<td>web search</td>
+</tr>
+</tbody>
+</table>
+<h3 id="telegram-reader">telegram-reader</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“Telegram”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>CLI 读取 Telegram 频道/群组消息</td>
+</tr>
+<tr>
+<td>Grok 替代</td>
+<td>web search</td>
+</tr>
+</tbody>
+</table>
+<h3 id="linkedin-reader">linkedin-reader</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“LinkedIn”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>通过 opencli 读取 LinkedIn 内容</td>
+</tr>
+<tr>
+<td>Grok 替代</td>
+<td>web search</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tradingview-reader">tradingview-reader</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“TradingView”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>通过 opencli 读取 TradingView 桌面端数据</td>
+</tr>
+<tr>
+<td>Grok 替代</td>
+<td>web search</td>
+</tr>
+</tbody>
+</table>
+<h3 id="opencli-reader">opencli-reader</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发</td>
+<td>“通用阅读”“网页抓取”</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>通用 opencli 网页读取（任意 URL）</td>
+</tr>
+<tr>
+<td>Grok 替代</td>
+<td>web search</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hyperliquid-reader-已删除">hyperliquid-reader · ❌ 已删除</h3>
+<p>加密 perp DEX 读取器。非美股。依赖 opencli 专用插件。2026-06-28
+移除。</p>
+<h3 id="yc-reader-已删除">yc-reader · ❌ 已删除</h3>
+<p>YC 创业公司查询。边缘用途。依赖 opencli。2026-06-28 移除。</p>
+<hr />
+<h2 id="已删除-skill-存档4-个-2026-06-28">5. 已删除 Skill 存档（4 个 ·
+2026-06-28）</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>删除原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>generative-ui</td>
+<td>Claude 专用 UI 生成，与金融分析无关</td>
+</tr>
+<tr>
+<td>skill-creator</td>
+<td>通用 Hermes skill 创建工具，非金融分析</td>
+</tr>
+<tr>
+<td>hyperliquid-reader</td>
+<td>加密 perp DEX，非美股；依赖 opencli 插件</td>
+</tr>
+<tr>
+<td>yc-reader</td>
+<td>YC 创业公司查询，边缘用途；依赖 opencli</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>下一篇: <a href="03-use-cases.md">03 用例</a></em> # 03 ·
+用例</p>
+<blockquote>
+<p>6 个真实场景 · 展示 finance-master 的完整链路</p>
+</blockquote>
+<hr />
+<h2 id="用例-1-美股深度分析标准路径">用例 1 ·
+美股深度分析（标准路径）</h2>
+<p><strong>用户输入</strong>： &gt; “ARK 加仓
+PLTR，帮我深度分析一下，现在值得买吗？”</p>
+<p><strong>触发链条</strong>：</p>
+<pre><code>三层检测 → L0 → L1(sherlock-finance §9) → deep-analysis
+                                         → company-valuation
+                                         → yfinance-data
+                                         → finance-sentiment
+                                         → §10 直接判断</code></pre>
+<p><strong>执行过程</strong>： 1. L0 检测到 ticker “PLTR” +
+意图”深度分析”“值得买” → 委托 sherlock-finance 2. §6
+预检：来源为公开信息，非杀猪盘 → 通过 3. §9 路由：具体股票深度分析 →
+deep-analysis 为主路径 4. 数据采集：yfinance（股价/财报）+ web
+search（催化剂）+ X search（ARK 持仓讨论） 5. 22
+维穿透：覆盖基础→财报→K线→宏观→同行→供应链→景气→原材料→期货→估值→治理→资金面→政策→专利→事件→DCF→Comps→IC
+Memo 6. 36 大师评审：巴菲特 bullish(82), 木头姐 bullish(88), Dalio
+neutral(65)… 7. DCF 估值：公允价值 $32.50（Stage1 22%, Stage2 12%, WACC
+9.5%） 8. §10 直接判断：本金安全 ✓ / 催化剂逻辑：政府AI合同 + Q2财报 /
+反事实：4 条可观测信号 9. 交付：结构化分析报告</p>
+<p><strong>加载的子 skill</strong>：deep-analysis, company-valuation,
+yfinance-data, finance-sentiment</p>
+<hr />
+<h2 id="用例-2-高风险快涨标的扫描链式联动">用例 2 ·
+高风险快涨标的扫描（链式联动）</h2>
+<p><strong>用户输入</strong>： &gt; “帮我找 Serenity 风格的 AI
+基础设施链美股，找卡脖子位置最紧的标的”</p>
+<p><strong>触发链条</strong>：</p>
+<pre><code>三层检测 → L0 → L1(§9 分支1) → x-advanced-research
+                               → serenity-skill
+                               → deep-analysis</code></pre>
+<p><strong>执行过程</strong>： 1. L0
+检测到意图”找标的”+“Serenity风格”+“AI基础设施” 2. §9
+路由：高风险快涨标的捕捉 → 三技能链式执行 3. x-advanced-research：X
+search “AI infrastructure chokepoint +$” → 筛选 15 个 ticker 4.
+serenity-skill：对 15 个 ticker 逐个 8 因子评分 - 某 AI
+芯片公司：demand_inflection=5, chokepoint=5, concentration=4 → score 85
+- 排序输出 Top 5 5. deep-analysis：对 Top 5 逐一 22 维穿透 + 估值 6.
+交付：Top 5 排序表 + 每个的瓶颈评分 + 估值结论</p>
+<p><strong>加载的子 skill</strong>：x-advanced-research, serenity-skill,
+deep-analysis（×5）</p>
+<hr />
+<h2 id="用例-3-杀猪盘拦截安全优先">用例 3 · 杀猪盘拦截（安全优先）</h2>
+<p><strong>用户输入</strong>： &gt;
+“群里老师推荐的票，说稳赚不赔，帮我看一下 XYZ 能买吗？”</p>
+<p><strong>触发链条</strong>：</p>
+<pre><code>三层检测 → L0 → L1(§9 安全优先) → trap-detector
+                                  └→ 🚫 终止</code></pre>
+<p><strong>执行过程</strong>： 1. L0 检测到 ticker “XYZ” + 意图”能买吗”
+2. §9 第一分支安全检测：触发词”群里”“老师推荐”“稳赚”全部命中 3.
+trap-detector 加载 → 八大信号检测： - ✅ “群/老师推荐”（信号 1） - ✅
+“稳赚不赔”（信号 2） - ✅ “帮我看一下”（信号 6 - 让第三方验证） -
+三信号命中 → 🚫 终止 4. 输出：杀猪盘预警报告 + 风险说明 5.
+<strong>不进入任何分析流程</strong></p>
+<p><strong>加载的子 skill</strong>：仅 trap-detector（其余全跳过）</p>
+<hr />
+<h2 id="用例-4-单维度工具估值分析">用例 4 · 单维度工具（估值分析）</h2>
+<p><strong>用户输入</strong>： &gt; “NVDA 现在 PE 多少？跟 AMD
+比谁便宜？”</p>
+<p><strong>触发链条</strong>：</p>
+<pre><code>三层检测 → L0 → L1(§9 单维度) → company-valuation
+                                → yfinance-data</code></pre>
+<p><strong>执行过程</strong>： 1. L0 检测到 ticker “NVDA”+“AMD” +
+意图”PE”“估值对比” 2. §9 路由：不触发深度分析（非”深度/全面”关键词）→
+单维度估值 3. company-valuation：可比公司分析 - NVDA: PE 45x, PEG 1.8,
+EV/EBITDA 38x - AMD: PE 28x, PEG 1.4, EV/EBITDA 22x - 同行中位数: PE 32x
+4. 结论：AMD 在同行中便宜，NVDA 有成长溢价 5. 交付：估值对比表 +
+一句话结论</p>
+<p><strong>加载的子 skill</strong>：company-valuation, yfinance-data</p>
+<hr />
+<h2 id="用例-5-saas-估值压缩分析兜底路由">用例 5 · SaaS
+估值压缩分析（兜底路由）</h2>
+<p><strong>用户输入</strong>： &gt; “Snowflake
+这一轮估值压缩了多少？Rule of 40 怎么样？”</p>
+<p><strong>触发链条</strong>：</p>
+<pre><code>三层检测 → L0 → L1(§9 兜底路由) → saas-valuation-compression</code></pre>
+<p><strong>执行过程</strong>： 1. L0 检测到 ticker “Snowflake” +
+“估值压缩”“Rule of 40” 2. §9 路由：不匹配深度分析/单维度/数据获取 →
+进入兜底路由 3. “SaaS”“估值压缩”“Rule of 40” → 命中
+saas-valuation-compression 4. 分析： - 融资轮次估值：Series F $12B → IPO
+$33B → 当前 $18B（压缩 45%） - EV/ARR：当前 8.2x（高点 25x，低点 6.5x）
+- Rule of 40：Growth 30% + FCF Margin 5% = 35（&gt;40? ❌ 接近但未达标）
+5. 交付：估值压缩时间线 + 可比倍数表 + Rule of 40 趋势</p>
+<p><strong>加载的子 skill</strong>：saas-valuation-compression（仅 1
+个）</p>
+<hr />
+<h2 id="用例-6-日内冲高分析">用例 6 · 日内冲高分析</h2>
+<p><strong>用户输入</strong>： &gt; “NVDA 今天开盘到现在拉了
+5%，量也很大，今天能到 180 吗？”</p>
+<p><strong>触发链条</strong>：</p>
+<pre><code>三层检测 → L0 → L1(sherlock-finance §12 日内协议)</code></pre>
+<p><strong>执行过程</strong>： 1. L0 检测到 ticker “NVDA” +
+“今天”“拉到”“量” 2. §9 未被显式匹配任一子 skill 分支 3.
+但这是纯方向性判断（日内走势）→ §12 日内协议接管 4. §12 五步： -
+数据采集：5 分钟 K 线（78 根）+ 期权 Call/Put ratio - 波段识别：已出现 2
+波上攻，第一波 25 万/5min，第二波 38 万/5min - 放量判断：第二波 &gt;40
+万 → 有效突破 - 日内目标：当前 $172 → 突破日内高 $175 + 放量 → 目标
+$178-180（下一整数关口） - 证伪条件：跌破前一波低点 $170 → 日内见顶 5.
+交付：目标价位 $178-180 · 置信度 B · 证伪：$170</p>
+<p><strong>加载的子 skill</strong>：无（纯 sherlock-finance §12
+协议内处理）</p>
+<hr />
+<h2 id="用例总结">用例总结</h2>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 26%" />
+<col style="width: 34%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>类型</th>
+<th>加载数</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>深度分析</td>
+<td>4</td>
+<td>L0→L1→deep-analysis+company-valuation+yfinance+sentiment</td>
+</tr>
+<tr>
+<td>2</td>
+<td>链式扫描</td>
+<td>3+</td>
+<td>L0→L1→x-advanced→serenity→deep-analysis(×N)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>安全拦截</td>
+<td>1</td>
+<td>L0→L1→trap-detector→🚫终止</td>
+</tr>
+<tr>
+<td>4</td>
+<td>单维度</td>
+<td>2</td>
+<td>L0→L1→company-valuation+yfinance</td>
+</tr>
+<tr>
+<td>5</td>
+<td>兜底路由</td>
+<td>1</td>
+<td>L0→L1→saas-valuation-compression</td>
+</tr>
+<tr>
+<td>6</td>
+<td>日内协议</td>
+<td>0</td>
+<td>L0→L1(§12 内置执行)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>下一篇: <a href="04-auditor-history.md">04
+审计员与版本史</a></em> # 04 · 审计员与版本史</p>
+<hr />
+<h2 id="finance-master-auditor-运维守护者">§1 finance-master-auditor ·
+运维守护者</h2>
+<p>Finance-Master-Auditor 是一个独立的 Hermes 专用 skill，位于
+<code>~/.hermes/skills/finance-master-auditor/</code>。它不参与金融分析——它的唯一职责是<strong>监控上游更新、审计变更、管理版本</strong>。</p>
+<h3 id="与-finance-master-的关系">与 finance-master 的关系</h3>
+<pre><code>finance-master/          ← 被管理的对象
+  ├── sherlock-finance/     （本地重写 · 无上游）
+  ├── finance-skills/       21 个（上游: himself65/finance-skills）
+  ├── UZI-Skill/            4 个（上游: wbh604/UZI-Skill）
+  ├── serenity-skill/       1 个（上游: muxuuu/serenity-skill）
+  └── VERSION               ← 由 auditor 管理
+
+finance-master-auditor/  ← 管理者
+  ├── scripts/skill-watchdog.py          检测器
+  └── references/
+      ├── sync-audit-guide.md             审计决策手册
+      ├── skill-registry.yaml             29 个 skill 注册表
+      ├── skill-purification-guide.md     提纯规则
+      └── system-audit-methodology.md     审计方法论</code></pre>
+<h3 id="同步流程每-14-天-cron-触发">同步流程（每 14 天 cron 触发）</h3>
+<pre><code>Step 0 · watchdog.py
+  ├── git fetch 3 个上游仓库
+  ├── 对比 last-seen SHA
+  └── 生成 diff 报告 JSON → ~/.hermes/data/skill-watch-diff.json
+
+Step 1 · 审计师分析
+  ├── 读 sync-audit-guide.md 决策树
+  ├── 读 diff 报告
+  └── 逐 skill 判断策略
+
+Step 2 · 执行策略
+  ├── AUTO:   直接覆盖（差异 &lt; 20%）
+  ├── PATCH:  覆盖 + 重应用补丁（差异 20-50%）
+  ├── NOTIFY: 不修改 · Telegram 通知（差异 &gt; 50%）
+  ├── IMPORT: 评估新 skill · 提纯导入
+  └── SKIP:   本地创建 · 跳过
+
+Step 3 · 提纯审计（§8 · 必须追加）
+  ├── Step 1: 删 .py/.json/.yaml
+  ├── Step 2: 有价值格式转换（JSON/Python → .md）
+  ├── Step 3: 死链检查（scripts/, .cache/, stage1() 等）
+  ├── Step 4: 弃用声明
+  ├── Step 5: SKILL.md 重写判断
+  └── Step 6: 空目录清理
+
+Step 4 · 版本管理
+  └── 有 AUTO/PATCH/IMPORT → VERSION PATCH +1
+
+Step 5 · Telegram 报告
+  └── 按 §7 模板推送审计结果</code></pre>
+<h3 id="已知本地修改模式v1.2-同步至-v4.3">已知本地修改模式（v1.2 同步至
+v4.3）</h3>
+<p><strong>深度重写（NOTIFY · 不自动合并）</strong>： | Skill | 改动 |
+|——-|——| | deep-analysis | SKILL.md 完全重写 (54KB→15KB ·
+v3.9.1→v4.0)；删 scripts/personas/assets | | sherlock-finance | SKILL.md
+完全重写 (v1.1→v2.1)；删港股协议；§9 v2.1 决策树 | |
+finance-master/SKILL.md | 三层触发逻辑 |</p>
+<p><strong>轻量修改（PATCH · 重应用补丁）</strong>： | Skill | 补丁 |
+|——-|——| | serenity-skill | handoff 协议 + bottleneck-scoring.md | |
+investor-panel | v4.0 agent 驱动重写 | | lhb-analyzer | v4.0 agent
+驱动重写 | | 全部 21 个 finance-skills | 删 plugin.json |</p>
+<p><strong>已删除（SKIP）</strong>： | Skill | 原因 | |——-|——| |
+generative-ui | Claude 专用 | | skill-creator | 非金融分析 | |
+hyperliquid-reader | 加密 perp | | yc-reader | 边缘用途 |</p>
+<hr />
+<h2 id="版本演进史">§2 版本演进史</h2>
+<h3 id="v4.3-2026-06-28-s-级生产就绪">v4.3 · 2026-06-28 · S
+级生产就绪</h3>
+<ul>
+<li>删除 4 个 C 类 skill（generative-ui, skill-creator,
+hyperliquid-reader, yc-reader）</li>
+<li>§9 决策树 v2.1：模式感知 + 兜底路由 + investor-panel 显式路由 +
+安全优先</li>
+<li>investor-panel + lhb-analyzer 重写为 v4.0 agent 驱动</li>
+<li>路由覆盖率：51% → 100%（29/29）</li>
+<li>Total: 33 → 29 skills</li>
+<li>Darwin 综合评分：91/100（A 级）→ 99/100（S 级）</li>
+</ul>
+<h3 id="v4.2-2026-06-27-提纯大扫除">v4.2 · 2026-06-27 · 提纯大扫除</h3>
+<ul>
+<li>serenity-skill：删 5 个非 .md 文件，创建 bottleneck-scoring.md，修复
+4 处死链</li>
+<li>UZI-Skill：12 个 reference 加弃用声明，investor-panel + lhb-analyzer
+重写</li>
+<li>sherlock-finance：G2-G7 修复（港股清理 + 死链 + 缺失协议）</li>
+<li>finance-master-auditor：新增 §8 提纯与死链审计</li>
+<li>三个旧 cron job 暂停，统一为 <code>2cd20c6abb1f</code></li>
+</ul>
+<h3 id="v4.1-2026-06-27-架构拆分">v4.1 · 2026-06-27 · 架构拆分</h3>
+<ul>
+<li>finance-master 与 finance-master-auditor 分离</li>
+<li>deep-analysis v4.0：22 维双模式框架（Hermes MCP / Grok web+X）</li>
+<li>serenity-skill 新增 x-advanced-research handoff 协议</li>
+<li>旧 standalone 目录删除（sherlock-finance, finance-skills,
+UZI-Skill）</li>
+</ul>
+<h3 id="v4.0-2026-06-26-超级整合">v4.0 · 2026-06-26 · 超级整合</h3>
+<ul>
+<li>finance-master 作为统一入口 skill 创建</li>
+<li>sherlock-finance 作为 L1 大脑模块迁入</li>
+<li>25 个 finance-skills 批量导入</li>
+<li>UZI-Skill 从 Claude Code 版本提纯（删 scripts/personas/assets）</li>
+<li>转换为纯 Markdown：51 YAML → 1 个 investor-frameworks.md（36
+位美股大师）</li>
+</ul>
+<hr />
+<h2 id="cron-job-状态">§3 Cron Job 状态</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>Job ID</th>
+<th>名称</th>
+<th>频率</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>2cd20c6abb1f</code></td>
+<td>finance-master 同步审计</td>
+<td>每 14 天</td>
+<td>✅ 活跃</td>
+</tr>
+<tr>
+<td><code>e383a5aa91dd</code></td>
+<td>finance-master 系统审计</td>
+<td>每周一 09:00</td>
+<td>✅ 活跃</td>
+</tr>
+<tr>
+<td><code>1f4f56a541be</code></td>
+<td>finance-skills 自动更新（旧）</td>
+<td>每周日 04:00</td>
+<td>⏸ 暂停</td>
+</tr>
+<tr>
+<td><code>5174e988364a</code></td>
+<td>UZI-Skill 每周更新（旧）</td>
+<td>每周日 07:30</td>
+<td>⏸ 暂停</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="文件清单">§4 文件清单</h2>
+<pre><code>finance-master/
+├── SKILL.md                     3KB
+├── VERSION                      5B
+├── sherlock-finance/SKILL.md    21KB  v2.1
+├── x-advanced-research/         16KB (SKILL.md + 4 refs + VERSION)
+├── serenity-skill/              46KB (SKILL.md + LICENSE + 2 assets + 1 eval
+│                                      + 3 examples + 9 refs)
+├── finance-skills/              21 skills · ~250KB total
+│   ├── company-valuation        21KB (SKILL.md + 4 refs)
+│   ├── yfinance-data             14KB
+│   ├── funda-data               78KB (SKILL.md + 11 refs)
+│   ├── sepa-strategy            37KB (SKILL.md + 7 refs)
+│   ├── ... (17 more)
+└── UZI-Skill/                   4 skills · ~170KB total
+    ├── deep-analysis            118KB (SKILL.md + 12 refs)
+    ├── investor-panel           92KB (SKILL.md + 10 refs)
+    ├── lhb-analyzer             7KB
+    └── trap-detector            5KB
+
+Total: 29 SKILL.md · 85 references · 1 LICENSE
+       ~575KB · 零 script · 零 JSON · 零 YAML · 零空目录</code></pre>
+<hr />
+<p><em>本手册与 finance-master v4.3 同步生成 · 2026-06-28</em></p>
+</body>
+</html>

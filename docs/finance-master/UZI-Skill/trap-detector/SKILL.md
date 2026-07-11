@@ -1,75 +1,174 @@
 ---
 name: trap-detector
-description: 杀猪盘检测器。当用户提到"朋友推荐"、"群里说"、"老师带"、"内幕消息"、"小红书 / 抖音看到推荐"等关键词，或显式要求"看看是不是杀猪盘 / 检测一下风险 / 这只票安全吗"时使用。扫描 8 个信号给出风险评级 🟢🟡🟠🔴。
-version: 3.9.1
-author: FloatFu-true
+description: >
+  Pump-and-dump / tip-trap detector for US equity research (finance-master v4.6.6).
+  Trigger when the user mentions friend tips, group/chat gurus, "guaranteed",
+  insider rumors, social "hot tips", or explicitly asks if a name is a scam/trap.
+  Scans 8 signals via Web + X; market structure from Brain Data Pack or IBKR.
+  Returns risk level 🟢🟡🟠🔴 and a RETURN_BLOCK for the Central Brain.
+version: 4.6.8
+ecosystem: 4.6.8
+author: FloatFu-true (original) / Veit Kwok (v4.5 Grok rewrite)
 license: MIT
 metadata:
-  hermes:
-    tags: [finance, a-share, trap-detection, risk, pump-and-dump, fraud-detection]
-    related_skills: [deep-analysis]
+  tags: [finance, us-stocks, trap-detection, risk, pump-and-dump]
+  market_scope: US_EQUITIES_ONLY
+  role: L2_SAFETY
+  related_skills:
+    - finance-master/sherlock-finance
+    - finance-master/UZI-Skill/deep-analysis
 ---
 
-# Trap Detector · 杀猪盘检测器
+# Trap Detector · v4.6.6 (US · Brain-invoked)
 
-## 触发场景
+> **L2 safety skill.** Invoked by `sherlock-finance` §9 / §6 — do **not** self-route to deep-analysis or other L2 skills.  
+> Full methodology detail: `references/eight-signals.md`.
 
-- 用户输入含关键词：朋友推荐、群里、老师带、内幕、必涨、翻倍、暴涨、稳赚、跟单
-- 显式要求：检测一下、是不是杀猪盘、安不安全、被套路了吗
-- /scan-trap 命令
+---
 
-## 8 信号扫描清单
+## Consumer rules (token + integrity)
 
-1. **大量低质量账号同时推荐** — web search 该股名 + "推荐"，看是否有同质化的低互动账号
-2. **推荐话术模板化** — 搜 "{name} 即将爆发"、"主力建仓完毕"、"目标翻倍" 等关键词
-3. **付费社群 / VIP 直播间引流** — 搜 "{name} 微信群"、"{name} 直播间"、"{name} VIP"
-4. **基本面与热度脱节** — 调用 fetch_financials + fetch_sentiment 对比
-5. **K 线异常配合** — 调用 fetch_kline，看是否在推荐密集期前已大幅拉升
-6. **老师 / 股神人设推广** — 搜 "{name} 老师"、"{name} 股神"
-7. **跨平台联动推广** — 搜小红书 / 抖音 / B 站 / 知乎多个平台
-8. **虚假研报 / 伪造消息** — 搜 "{name} 谣言"、"{name} 辟谣"、"{name} 虚假"
+1. Prefer fields in the Brain **`data_pack`** (quote, volume, 52w move, fundamentals snippets).  
+2. **Never** call deleted helpers: `fetch_financials`, `fetch_sentiment`, `fetch_kline`, `fetch_capital_flow`, or any Python `scripts/`.  
+3. Market structure (signals 4–5): use Data Pack → else IBKR (`search_contracts` + `get_price_snapshot` + optional `get_price_history`) → else **one** Web price/fundamentals query.  
+4. Promotion signals (1–3, 6–8): **Web search + X search** only. Cap ≈ **8–12** new tool calls total.  
+5. End with **`### RETURN_BLOCK`** for the Brain. On 🟠/🔴, Brain must **STOP** the research pipeline.
 
-## 风险评级
+---
 
-| 命中信号数 | 评级 | 建议 |
-|---|---|---|
-| 0-1 | 🟢 安全 | 数据正常，未发现被异常推广迹象 |
-| 2-3 | 🟡 注意 | 有少量推广，建议核实信息源 |
-| 4-5 | 🟠 警惕 | 多个推广信号，**强烈建议谨慎** |
-| 6+ | 🔴 高度可疑 | **强烈建议回避**，疑似杀猪盘特征 |
+## Triggers
 
-## 用户关键词加权
+| Class | Examples |
+|-------|----------|
+| Social tip | 朋友推荐、群里说、老师带、跟单、内幕、稳赚、必涨、翻倍 |
+| CN platforms | 小红书、抖音、直播间荐股 |
+| EN platforms | Discord/Telegram “signals”, “guaranteed runner”, “insider” |
+| Explicit | 杀猪盘、是不是套路、pump and dump、safe to buy this tip? |
 
-如果用户提到下列词，**信号严重程度自动 +1 级**：
-- "朋友推荐我" / "群里有人说" / "老师带我"  → +1
-- "内幕消息" / "稳赚不赔" → +2
-- "必涨" / "翻倍" / "暴涨"  → +1
+US tickers only for market structure. Tip language may be Chinese even when the name is US-listed.
 
-## 输出格式
+---
 
-```json
-{
-  "ticker": "...",
-  "trap_score": 1-10,           // 反向，越高越安全
-  "trap_level": "🟢 安全",
-  "signals_hit": [
-    {
-      "id": 3,
-      "name": "付费社群引流",
-      "evidence": "搜索发现 5 个公众号同期推送 VIP 群入口",
-      "severity": "high",
-      "sources": ["url1", "url2"]
-    }
-  ],
-  "user_keyword_boost": 1,
-  "recommendation": "🟢 未发现明显推广痕迹，可正常分析。但任何投资都需自己判断。",
-  "warning_phrases": ["..."]    // 给用户的明确警告（如有）
-}
+## 8-signal scan (summary)
+
+| # | Signal | How to gather (v4.6.6) |
+|---|--------|----------------------|
+| 1 | Coordinated low-quality accounts | Web + X: same ticker + “buy/moon/target” clustering |
+| 2 | Template hype language | Phrase search (see reference) |
+| 3 | Paid group / VIP funnel | Web: group/VIP/WeChat/Discord invite near ticker |
+| 4 | Fundamentals vs hype disconnect | Data Pack / Web financials + X/Web heat — **no fetch_*** |
+| 5 | Price already ran into the tip | Data Pack / IBKR history / Web chart summary — **no fetch_kline** |
+| 6 | Guru / “teacher” persona | Web + X: “老师/股神/signals coach” + ticker |
+| 7 | Cross-platform blast | ≥3 venues (X, Reddit/web, TikTok/web, YouTube, etc.) |
+| 8 | Fake research / rumor | Web: “rumor/denied/clarifies” + no sell-side watermark |
+
+Per-signal hit criteria → `references/eight-signals.md`.
+
+---
+
+## User keyword boost
+
+Raise severity by **one full level** (or add +1 to hit count for threshold math) when user text includes:
+
+| Phrases | Boost |
+|---------|------:|
+| 朋友推荐 / 群里 / 老师带 / friend told me / group chat | +1 |
+| 内幕 / 稳赚不赔 / insider / guaranteed | +2 |
+| 必涨 / 翻倍 / 暴涨 / “easy 10x” | +1 |
+
+---
+
+## Risk levels
+
+| Hits + boost (effective) | Level | Action for Brain |
+|--------------------------|-------|------------------|
+| 0–1 | 🟢 安全 | May continue analysis |
+| 2–3 | 🟡 注意 | Continue with warnings |
+| 4–5 | 🟠 警惕 | **STOP** buy narrative; optional deep only if user insists after warning |
+| 6+ | 🔴 高度可疑 | **Hard STOP** research-as-buy path |
+
+If ≥4 hits, user-facing text **must** start with 「强烈建议谨慎」 or 「强烈建议回避」.
+
+---
+
+
+## L2 confidence (Cog-4 · advisory only)
+
+`confidence` in `### RETURN_BLOCK` is **skill-local deliverable quality**, not user investment confidence.
+
+| Rule | Max grade |
+|------|-----------|
+| `status: partial` or material `fields_gap` | **B** |
+| X/social-only evidence for hard claims | **C** |
+| `status: blocked` | no thesis A |
+| Complete skill scope + hard sources + no material gaps | **A** allowed (still advisory) |
+
+Default `confidence_scope` for this skill: **safety**.
+
+`confidence` here = quality of the **trap classification**, not “is XYZ a good long.”  
+On 🟠/🔴, `hard_stop: true` dominates any buy path regardless of grade letter.
+
+Also emit Cog-4 fields when practical: `confidence_scope`, `confidence_basis` (evidence_independence, physical_mechanical, data_gaps_material), `limiting_factors`.
+
+**Never** emit Brain `### CONFIDENCE_BLOCK` or `mode:` — the Central Brain re-grades via §H.6.
+
+## Output
+
+### User-facing (Markdown)
+
+```markdown
+## Trap check · {TICKER|name}
+
+**Level:** 🟢|🟡|🟠|🔴  
+**Effective hits:** N (raw hits + keyword boost)
+
+| # | Signal | Status | Evidence |
+|---|--------|--------|----------|
+| 1 | ... | hit / miss / data_gap | ... |
+
+### Recommendation
+...
 ```
 
-## 完成检查
+### RETURN_BLOCK (required)
 
-- [ ] 8 个信号每个都给出"命中 / 未命中 / 数据不足"
-- [ ] 至少有 1 条具体证据 URL（除非全部安全）
-- [ ] recommendation 必须有，不能空
-- [ ] 如果 ≥ 4 信号，必须用 "强烈建议谨慎" 或 "强烈建议回避" 开头
+```text
+### RETURN_BLOCK
+skill: trap-detector
+status: ok|partial
+ticker: <SYM or UNKNOWN>
+confidence: A|B|C
+confidence_scope: safety
+confidence_basis:
+  evidence_independence: strong|weak|gap
+  physical_mechanical: strong|weak|gap
+  data_gaps_material: true|false
+limiting_factors: []
+trap_level: green|yellow|orange|red
+trap_score: 1-10
+fields_filled: [signals_1_8, keyword_boost]
+fields_gap: [...]
+artifacts:
+  signals_hit: [{id, name, severity, evidence}]
+  user_keyword_boost: <n>
+  recommendation: <one line>
+  hard_stop: true|false
+counterfactuals: []
+raw_notes: <≤200 words>
+```
+
+`hard_stop: true` when level is orange or red.
+
+---
+
+## Completion checklist
+
+- [ ] All 8 signals: hit / miss / data_gap  
+- [ ] ≥1 concrete URL or post cite unless all green with no promotion found  
+- [ ] No `fetch_*` or script calls  
+- [ ] RETURN_BLOCK present  
+- [ ] Orange/red → explicit stop language for Brain  
+
+---
+
+*v4.6.6 · DATA_PACK consumer · Cog-4 conf advisory · IBKR market-data only* removed; Brain hard-stop contract · Cog-4 L2 conf advisory*

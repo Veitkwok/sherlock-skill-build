@@ -1,5 +1,6 @@
 # Skill Purification Methodology
 
+> **v4.6.8:** Reference for **manual** human upgrades only. The auditor does **not** run purification automatically.  
 > 从 Python 脚本密集型 skill 提取纯方法论，适配标准化 AI Agent 环境（Hermes/Grok 网页版）。
 
 ## 核心原则

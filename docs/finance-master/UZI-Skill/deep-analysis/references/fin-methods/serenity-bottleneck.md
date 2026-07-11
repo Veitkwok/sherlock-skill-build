@@ -37,7 +37,7 @@
 - 需求 → 营收（量 × ASP）？→ 毛利率（供给紧 → ASP 提价 → 毛利扩张）？
   → 经营现金流（长协预付 / 产能预订）？→ 在建工程 / capex（扩产信号）？
 - 输出：明确指向 1-2 个**领先科目**，作为后续验证链的观测口。
-- 与 `lib/fin_models.py` 联动：该科目的预测可喂给三表预测 / DCF。
+- 与 `agent in-context models (lib/fin_models.py deleted)` 联动：该科目的预测可喂给三表预测 / DCF。
 
 ### ③ 猎 misclassified 小盘 Hunt Misclassified Small-Caps
 找**被市场错误分类、高弹性**的小盘。

@@ -1,184 +1,75 @@
 ---
 name: startup-analysis
 description: >
-  Analyze a startup from three perspectives: VC investor, job applicant, and CEO/founder.
-  Use this skill whenever the user wants to evaluate a startup, assess whether to invest in
-  or join a startup, do due diligence, evaluate a job offer from a startup, understand
-  a startup's competitive position, or assess company health and trajectory.
-  Triggers: "analyze this startup", "should I join [company]", "is [company] a good investment",
-  "evaluate [company]", "due diligence on [company]", "what do you think of [startup]",
-  "should I take this startup job offer", "how healthy is [company]", "startup assessment",
-  "company analysis", "is [company] worth joining", "what's the outlook for [company]",
-  "research [company] for me", any mention of evaluating or assessing a startup or tech company
-  from investment, career, or strategic perspectives — provide all three perspectives by default.
+  Three-lens startup analysis (VC / job applicant / founder) using public Web sources.
+  v4.6.6 US/global startups; no YC-reader or opencli dependency. Triggers: analyze startup,
+  should I join, due diligence startup, is it investable.
+version: 4.6.8
+ecosystem: 4.6.8
+metadata:
+  tags: [finance, startup, vc, career]
+  market_scope: US_PRIMARY
+  role: L2_TOOL
 ---
 
-# Startup Analysis
+# Startup Analysis · v4.6.6
 
-Produces a multi-perspective analysis of a startup, examining it through three lenses that each reveal different aspects of company health and potential:
+## Consumer rules
 
-1. **VC Investor Lens** — Is this a good investment? Market size, unit economics, growth trajectory, team quality, defensibility
-2. **Job Applicant Lens** — Should I work here? Equity value, runway risk, culture signals, career growth, compensation fairness
-3. **CEO/Founder Lens** — How healthy is this company? Product-market fit, burn efficiency, competitive moat, organizational health
+- Web-only research (company site, news, funding databases via search).  
+- **Do not** call quarantined `yc-reader` / opencli-reader.  
+- If public US ticker exists, optional IBKR quote.  
+- Frameworks: `references/vc-framework.md`, `job-applicant-framework.md`, `ceo-framework.md`.
 
-Each perspective surfaces insights the others miss. A company can be a great investment but a terrible place to work (or vice versa). The goal is to give the user a 360-degree view so they can make informed decisions.
+## Three lenses (default all)
 
----
+| Lens | Core questions |
+|------|----------------|
+| VC | Market, product, traction, team, defensibility, round terms |
+| Job applicant | Runway, equity realism, growth, culture signals, role leverage |
+| Founder/CEO | PMF, burn efficiency, org health, competitive pressure |
 
-## Step 1: Gather Information
+End with: aligned insights vs tensions across lenses. Research support only.
 
-Before analyzing, collect as much public information as possible about the startup. Use web search, the company's website, Crunchbase data, press coverage, and any other available sources.
+```text
 
-**Key data to gather:**
+## L2 confidence (Cog-4 · advisory only)
 
-| Category | What to find |
-|----------|-------------|
-| **Basics** | Founded year, HQ location, employee count, what the product does |
-| **Funding** | Total raised, last round (size, date, valuation if known), key investors |
-| **Product** | What they sell, who buys it, pricing model, key competitors |
-| **Traction** | Users, revenue (if public), growth signals, notable customers |
-| **Team** | Founders' backgrounds, key hires, LinkedIn headcount trends |
-| **Market** | Industry, market size estimates, tailwinds/headwinds |
-| **News** | Recent press, product launches, partnerships, layoffs, pivots |
+`confidence` in `### RETURN_BLOCK` is **skill-local deliverable quality**, not user investment confidence.
 
-If certain data isn't publicly available (e.g., revenue for private companies), note the gap and infer what you can from indirect signals (hiring pace, customer logos, web traffic proxies, job postings).
+| Rule | Max grade |
+|------|-----------|
+| `status: partial` or material `fields_gap` | **B** |
+| X/social-only evidence for hard claims | **C** |
+| `status: blocked` | no thesis A |
+| Complete skill scope + hard sources + no material gaps | **A** allowed (still advisory) |
 
-### When information is insufficient
+Default `confidence_scope` for this skill: **single_dim**.
 
-Many startups — especially early-stage or niche ones — have limited public presence. If web search does not return enough information to produce a meaningful analysis (e.g., you can't determine what the company does, who founded it, or how it's funded), **ask the user to provide the company's website URL** before proceeding. The company website is often the single most information-dense source, and reading it directly (about page, pricing page, team page, blog) can fill most gaps.
+Also emit Cog-4 fields when practical: `confidence_scope`, `confidence_basis` (evidence_independence, physical_mechanical, data_gaps_material), `limiting_factors`.
 
-You can also ask the user for:
-- The company's website or landing page URL
-- A Crunchbase, LinkedIn, or PitchBook link
-- Any pitch deck, job listing, or press article they have
-- Specific context they already know (e.g., "they just raised a Series A from Sequoia")
+**Never** emit Brain `### CONFIDENCE_BLOCK` or `mode:` — the Central Brain re-grades via §H.6.
 
-It is better to ask for a URL and produce an accurate analysis than to guess and produce a misleading one.
-
----
-
-## Step 2: Determine Which Perspectives to Cover
-
-By default, produce all three perspectives. If the user specifies a particular angle (e.g., "I'm considering joining them" or "should I invest"), emphasize that perspective but still include the others as context — they often reveal relevant information.
-
-| User's situation | Primary perspective | Still include |
-|-----------------|-------------------|---------------|
-| Considering investing | VC Investor | Job Applicant (talent signal), CEO (operational health) |
-| Considering a job offer | Job Applicant | VC Investor (funding runway), CEO (strategic direction) |
-| Running the company / advisory | CEO/Founder | VC Investor (how investors see you), Job Applicant (talent attractiveness) |
-| General curiosity / research | All equally | — |
-
----
-
-## Step 3: Analyze from Each Perspective
-
-Read the relevant reference files for the detailed framework for each perspective. These contain the specific criteria, metrics, and red/green flags to evaluate.
-
-### VC Investor Analysis
-
-Read `references/vc-framework.md` for the full evaluation framework.
-
-Core areas to assess:
-- **Market opportunity** — TAM/SAM/SOM, market timing, secular trends
-- **Product & traction** — Product-market fit signals, growth metrics, retention
-- **Unit economics** — CAC, LTV, margins, burn multiple, path to profitability
-- **Team** — Founder-market fit, technical depth, hiring ability
-- **Defensibility** — Moats (network effects, switching costs, data, brand, regulatory)
-- **Deal terms context** — Stage-appropriate valuation, comparable exits
-
-Produce a clear **Investment Thesis** (bull case) and **Key Risks** (bear case). End with a verdict: Strong Pass / Lean Pass / Lean Invest / Strong Invest, with reasoning.
-
-### Job Applicant Analysis
-
-Read `references/job-applicant-framework.md` for the full evaluation framework.
-
-Core areas to assess:
-- **Financial stability** — Runway, burn rate, funding trajectory, revenue health
-- **Equity value** — Option/equity package analysis, dilution risk, liquidation preferences, realistic exit scenarios
-- **Career growth** — Role scope, learning opportunity, resume value, mentorship
-- **Culture & work-life** — Glassdoor signals, employee tenure data, leadership style
-- **Product & market risk** — Is PMF real? What happens if the startup fails?
-- **Red flags** — High turnover, constant pivots, vague metrics, founders cashing out
-
-Produce a clear **Why Join** (pros) and **Watch Out For** (risks). End with a verdict: Strong Pass / Lean Pass / Lean Join / Strong Join, with reasoning.
-
-### CEO/Founder Analysis
-
-Read `references/ceo-framework.md` for the full evaluation framework.
-
-Core areas to assess:
-- **Product-market fit** — Retention curves, organic growth, Sean Ellis test proxy
-- **Growth efficiency** — Burn multiple, CAC payback, magic number
-- **Competitive position** — Moat strength, competitive dynamics, market share trajectory
-- **Organizational health** — Hiring pipeline, attrition, team capability gaps
-- **Fundraising readiness** — Metrics vs. benchmarks for next round, investor narrative
-- **Strategic risks** — Platform dependency, customer concentration, regulatory exposure
-
-Produce a clear **Strengths to Double Down On** and **Urgent Areas to Address**. End with a health grade: Critical / Struggling / Stable / Strong / Exceptional, with reasoning.
-
----
-
-## Step 4: Synthesize Cross-Perspective Insights
-
-After the three analyses, add a synthesis section that highlights:
-
-1. **Where perspectives agree** — If all three lenses flag the same strength or weakness, it's probably real
-2. **Where perspectives diverge** — A company can be VC-attractive (huge market) but employee-risky (high burn, low runway). Call these out.
-3. **The bottom line** — One paragraph summary: what kind of company is this, what's its most likely trajectory, and what should the user do based on their stated (or implied) situation
-
----
-
-## Step 5: Present the Report
-
-Structure the output as a clean, scannable report:
-
-```
-# [Company Name] — Startup Analysis
-
-## Summary
-[2-3 sentence overview with key verdict]
-
-## VC Investor Perspective
-### Market Opportunity
-### Product & Traction
-### Unit Economics (if available)
-### Team
-### Defensibility
-### Investment Verdict: [Strong Pass / Lean Pass / Lean Invest / Strong Invest]
-[Reasoning]
-
-## Job Applicant Perspective
-### Financial Stability
-### Equity Value Assessment
-### Career Growth Potential
-### Culture & Work-Life Signals
-### Risk Factors
-### Employment Verdict: [Strong Pass / Lean Pass / Lean Join / Strong Join]
-[Reasoning]
-
-## CEO/Founder Perspective
-### Product-Market Fit Assessment
-### Growth Efficiency
-### Competitive Position
-### Organizational Health
-### Strategic Risks
-### Health Grade: [Critical / Struggling / Stable / Strong / Exceptional]
-[Reasoning]
-
-## Cross-Perspective Synthesis
-### Points of Agreement
-### Points of Divergence
-### Bottom Line
+### RETURN_BLOCK
+skill: startup-analysis
+status: ok|partial
+ticker: NAME|SYM
+confidence: A|B|C
+confidence_scope: single_dim
+confidence_basis:
+  evidence_independence: strong|weak|gap
+  physical_mechanical: strong|weak|gap
+  data_gaps_material: true|false
+limiting_factors: []
+fields_filled: [vc, job, founder]
+fields_gap: [...]
+artifacts:
+  vc_verdict: ...
+  job_verdict: ...
+  founder_health: ...
+  top_risks: [...]
+counterfactuals: []
+raw_notes: <≤350 words>
 ```
 
-Adapt section depth to available data — if financials are completely opaque, say so and focus on what's observable. Don't fabricate metrics, but do make informed inferences and state your confidence level.
-
----
-
-## Reference Files
-
-- `references/vc-framework.md` — VC due diligence checklist with metrics, benchmarks, and red/green flags
-- `references/job-applicant-framework.md` — Job seeker evaluation framework with equity analysis and culture assessment
-- `references/ceo-framework.md` — CEO self-assessment framework with operational metrics and strategic analysis
-
-Read these when you need the detailed criteria and benchmarks for each perspective.
+*v4.6.6 · DATA_PACK consumer · Cog-4 conf advisory · IBKR market-data only*

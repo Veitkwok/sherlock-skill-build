@@ -1,5 +1,9 @@
 # Liquidity Metrics Reference
 
+> ⚠️ **v4.6.6 data fence:** Do **not** `import yfinance`, `pip install yfinance`, or execute `yf.*` / `Ticker(`. Live path = Brain **DATA_PACK** → **IBKR MCP** → **Web/X**. Any remaining Yahoo-shaped names are **labels only**, not runnable code.
+
+
+
 Complete reference for all liquidity metrics, formulas, code templates, and interpretation guidelines.
 
 ---
@@ -12,7 +16,7 @@ Complete reference for all liquidity metrics, formulas, code templates, and inte
 4. [Square-Root Market Impact Model](#square-root-market-impact-model)
 5. [Turnover Ratio](#turnover-ratio)
 6. [Composite Liquidity Score](#composite-liquidity-score)
-7. [yfinance Fields Reference](#yfinance-fields-reference)
+7. [IBKR / DATA_PACK field map](#ibkr--data_pack-field-map)
 8. [Edge Cases and Gotchas](#edge-cases-and-gotchas)
 
 ---
@@ -91,7 +95,7 @@ High CV (> 1.0) means volume is "spiky" — the stock alternates between very qu
 Volume follows a U-shape pattern in US equities — highest at open and close, lowest midday. Use 5-minute bars to visualize:
 
 ```python
-intraday = ticker.history(period="5d", interval="5m")
+# FENCED_v4.6.6: intraday = ticker.history(period="5d", interval="5m")
 intraday["time"] = intraday.index.time
 vol_by_time = intraday.groupby("time")["Volume"].mean()
 ```
@@ -194,25 +198,21 @@ Total Round-Trip = 2 × (Spread Cost + Impact)
 ### Code for Impact Curve
 
 ```python
-def impact_curve(ticker_symbol, period="3mo"):
-    ticker = yf.Ticker(ticker_symbol)
-    hist = ticker.history(period=period)
-    info = ticker.info
-    
-    price = info.get("currentPrice") or hist["Close"].iloc[-1]
-    adv = hist["Volume"].mean()
-    sigma = hist["Close"].pct_change().dropna().std()
-    
-    sizes_pct_adv = [0.1, 0.5, 1, 2, 5, 10, 20, 50]
-    
+def impact_curve(price, adv_shares, daily_vol_sigma, sizes_pct_adv=None):
+    # FENCED_v4.6.6: """Market-impact sketch from pack/IBKR inputs — no yfinance.
+    price: last (IBKR/pack)
+    adv_shares: average daily volume in shares (or convert from ADV USD / price)
+    daily_vol_sigma: daily return stdev from pack ohlcv or history
+    """
+    if sizes_pct_adv is None:
+        sizes_pct_adv = [0.1, 0.5, 1, 2, 5, 10, 20, 50]
     results = []
     for pct in sizes_pct_adv:
         frac = pct / 100
-        shares = int(adv * frac)
-        impact_pct = sigma * np.sqrt(frac) * 100
+        shares = int(adv_shares * frac)
+        impact_pct = daily_vol_sigma * (frac ** 0.5) * 100
         impact_per_share = impact_pct / 100 * price
         total_cost = impact_per_share * shares
-        
         results.append({
             "pct_adv": pct,
             "shares": shares,
@@ -221,7 +221,6 @@ def impact_curve(ticker_symbol, period="3mo"):
             "cost_per_share": round(impact_per_share, 4),
             "total_cost": round(total_cost, 2),
         })
-    
     return results
 ```
 
@@ -241,7 +240,7 @@ Days to Trade Float = Float Shares / Average Daily Volume
 ### yfinance Fields
 
 ```python
-info = ticker.info
+# FENCED_v4.6.6: info = ticker.info
 shares_outstanding = info.get("sharesOutstanding")
 float_shares = info.get("floatShares")
 ```
@@ -297,44 +296,44 @@ This is a heuristic, not a formal measure. It's useful for quick comparisons but
 
 ---
 
-## yfinance Fields Reference
+## IBKR / DATA_PACK field map
 
-### From `ticker.info`
+> **No yfinance.** Prefer Brain pack → IBKR snapshot/history → Web for shares/float if needed.
 
-| Field | Description | Used For |
-|---|---|---|
-| `bid` | Current best bid price | Spread |
-| `ask` | Current best ask price | Spread |
-| `bidSize` | Size at best bid (lots) | Book depth |
-| `askSize` | Size at best ask (lots) | Book depth |
-| `currentPrice` | Last trade price | Impact calc |
-| `regularMarketPrice` | Regular session last price | Fallback price |
-| `averageVolume` | 3-month avg daily volume | Volume metrics |
-| `averageVolume10days` | 10-day avg daily volume | Recent volume |
-| `averageDailyVolume10Day` | Same as above (alias) | Recent volume |
-| `volume` | Today's volume so far | RVOL |
-| `sharesOutstanding` | Total shares outstanding | Turnover |
-| `floatShares` | Free float shares | Float turnover |
-| `marketCap` | Market capitalization | Context |
+### From pack `quote` / IBKR `get_price_snapshot`
 
-### From `ticker.history()`
+| Field | Description | Used for |
+|-------|-------------|----------|
+| `bid` / `ask` (bid_ask) | Best bid/ask | Spread |
+| `last` | Last trade / mark | Impact, mid |
+| `open` / `high` / `low` | Session OHLC when available | Intraday |
+| `volume` | Session volume | RVOL |
+| `avg_90d_usd_volume` | ADV in USD | Liquidity grade |
+| `prior_close` | Prior close | Change |
+| `implied_vol_underlying` | Underlying IV | Options context |
+
+### From pack `ohlcv` / IBKR `get_price_history`
 
 | Column | Description |
-|---|---|
-| `Open` | Opening price |
-| `High` | Day's high |
-| `Low` | Day's low |
-| `Close` | Closing price |
-| `Volume` | Shares traded |
+|--------|-------------|
+| `o` / `h` / `l` / `c` | Open/high/low/close |
+| `v` | Volume |
+| `date` or `ts` | Bar timestamp |
 
-### From `ticker.option_chain(expiration)`
+### From IBKR option surface (optional)
 
-| Column | Description | Used For |
-|---|---|---|
-| `bid` | Option bid price | Options spread |
-| `ask` | Option ask price | Options spread |
-| `volume` | Option contracts traded | Options liquidity |
-| `openInterest` | Open contracts | Depth proxy |
+| Source | Fields | Used for |
+|--------|--------|----------|
+| `get_option_data` + leg `get_price_snapshot` | bid/ask, volume, OI, mid IV | Options liquidity |
+
+### From Web (only if pack gap)
+
+| Need | Source |
+|------|--------|
+| shares outstanding / float | filings / IR |
+| market cap | derived last × shares or Web |
+
+Mark any Web fallback in `fields_gap` / conf limiting.
 
 ---
 
@@ -344,7 +343,7 @@ Analyze near-the-money options spreads from the nearest expiration to gauge deri
 
 ```python
 def options_spread_analysis(ticker_symbol):
-    ticker = yf.Ticker(ticker_symbol)
+    # FENCED_v4.6.6: ticker = yf.Ticker(ticker_symbol)
     expirations = ticker.options
     if not expirations:
         return None
@@ -366,8 +365,8 @@ Yahoo Finance does not provide full Level 2 data. Use this function to gather av
 
 ```python
 def order_book_proxy(ticker_symbol):
-    ticker = yf.Ticker(ticker_symbol)
-    info = ticker.info
+    # FENCED_v4.6.6: ticker = yf.Ticker(ticker_symbol)
+    # FENCED_v4.6.6: info = ticker.info
 
     # Top of book
     top_of_book = {
@@ -378,7 +377,7 @@ def order_book_proxy(ticker_symbol):
     }
 
     # Intraday volume distribution (5-min bars, last 5 days)
-    intraday = ticker.history(period="5d", interval="5m")
+    # FENCED_v4.6.6: intraday = ticker.history(period="5d", interval="5m")
     if not intraday.empty:
         intraday_copy = intraday.copy()
         intraday_copy["time"] = intraday_copy.index.time

@@ -1,5 +1,9 @@
 # ETF Premium/Discount Reference
 
+> ⚠️ **v4.6.6 data fence:** Do **not** `import yfinance`, `pip install yfinance`, or execute `yf.*` / `Ticker(`. Live path = Brain **DATA_PACK** → **IBKR MCP** → **Web/X**. Any remaining Yahoo-shaped names are **labels only**, not runnable code.
+
+
+
 ## Core Formula
 
 ```
@@ -60,7 +64,7 @@ This arbitrage mechanism keeps most liquid ETFs within a few basis points of NAV
 
 ### Limitations
 
-- **No historical NAV**: yfinance only provides the most recent `navPrice`. You cannot build a time series of premiums/discounts from yfinance alone.
+- **No historical NAV**: Many free APIs only provide a single latest NAV; prefer issuer NAV / Web. You cannot build a time series of premiums/discounts from yfinance alone.
 - **NAV timing**: The `navPrice` reflects end-of-day calculation. During trading hours, the market price moves but NAV is static until the next calculation.
 - **Not all tickers**: Some very new or obscure ETFs may not have `navPrice` populated.
 - **Delay**: Market prices may be delayed 15 minutes for some exchanges.
@@ -178,7 +182,7 @@ If |Premium%| > Bid-Ask Spread%:
 
 ---
 
-## Historical Context (Cannot Be Computed from yfinance Alone)
+## Historical Context (Cannot Be Computed from a single free-API NAV alone)
 
 For historical premium/discount analysis, users would need:
 - **ETF issuer websites**: iShares, Vanguard, SPDR publish historical premium/discount data for their funds

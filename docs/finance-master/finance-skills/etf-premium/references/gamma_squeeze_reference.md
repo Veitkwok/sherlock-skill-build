@@ -1,5 +1,9 @@
 # ETF Gamma Squeeze & Premium Surge Reference
 
+> ⚠️ **v4.6.6 data fence:** Do **not** `import yfinance`, `pip install yfinance`, or execute `yf.*` / `Ticker(`. Live path = Brain **DATA_PACK** → **IBKR MCP** → **Web/X**. Any remaining Yahoo-shaped names are **labels only**, not runnable code.
+
+
+
 This document supports **Sub-Skill E** in `SKILL.md`. It covers:
 
 1. The premium-decomposition framework (NAV vs excess)
@@ -44,7 +48,7 @@ NAV_return ≈ Σ (weight_i × return_i) / Σ weight_i
 
 Sources of holdings weights:
 
-1. `yf.Ticker(...).funds_data.top_holdings` — works for many US-listed ETFs but is incomplete
+1. ETF issuer holdings / pack weights (never yfinance funds_data)
 2. ETF issuer holdings page (iShares, SPDR, Invesco) — most authoritative
 3. User-supplied weights — for niche or international ETFs
 
@@ -228,5 +232,5 @@ Read this as: roughly half of the move was structural (gamma + AP impedance), an
 - **GEX is sensitive to dealer-positioning assumptions.** Always state the convention. A net-GEX number with a flipped sign convention is worse than no number at all.
 - **NAV proxy ≠ official NAV.** End-of-day NAV is calculated by the fund administrator using closing prices in the home market plus FX adjustments. The holdings-weighted estimate is a directional proxy.
 - **The dealer-share-of-volume figure is an upper bound.** It assumes every gamma-related share was hedged on the day; in practice hedging spreads over multiple sessions.
-- **Implied volatility from yfinance is the option's quoted IV, not a fitted volatility surface.** It's adequate for GEX estimation but not for precise pricing.
+- **Implied volatility from IBKR option mid/IV fields is quoted IV, not a fitted volatility surface.** It's adequate for GEX estimation but not for precise pricing.
 - **This skill is descriptive, not predictive.** Quantifying that "35% of buying was dealer hedging today" does not tell you what tomorrow's flows will be.

@@ -1,5 +1,9 @@
 # Sum-of-the-Parts (SOTP) Valuation
 
+> ⚠️ **v4.6.6 data fence:** Do **not** `import yfinance`, `pip install yfinance`, or execute `yf.*` / `Ticker(`. Live path = Brain **DATA_PACK** → **IBKR MCP** → **Web/X**. Any remaining Yahoo-shaped names are **labels only**, not runnable code.
+
+
+
 For companies with 2+ reporting segments, SOTP values each segment using pure-play peer multiples, sums them, and compares to market cap to detect conglomerate discount.
 
 ## When to Use SOTP

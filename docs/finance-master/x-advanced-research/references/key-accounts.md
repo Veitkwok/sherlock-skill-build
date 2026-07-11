@@ -1,5 +1,7 @@
 # Key X Accounts / 博主重点列表（用户个性化配置）
 
+> **v4.5:** List is live (not a scaffold). @aleabitoreddit remains **Top #1** for high-risk US bottleneck discovery. Router must not ask the user to “create this file.”
+
 **说明**：在此维护你重点关注的 X 账号（博主、分析师、机构、 niche 专家等）。路由器会自动优先采样这些账号的内容、提升权重，或在 profile 分析时默认包含。
 
 格式建议（每行一个，或分组）：

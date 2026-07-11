@@ -2,6 +2,8 @@
 
 Use this file when the market determines which source path matters.
 
+> **v4.5 finance-master:** Default to **US** paths below. A-share / HK / TW / JP / KR / EU sections are optional only when the user explicitly asks multi-market research. Brain deep-analysis follow-on expects **US-listed** `recommended_for_deep` tickers.
+
 ## US
 
 Primary source path:

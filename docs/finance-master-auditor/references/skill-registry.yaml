@@ -1,365 +1,199 @@
-# Skill Registry · finance-master v1.1
-# Auto-generated: 2026-06-28
-# Total: 29 skills = 26 sub-skills (with upstream sources) + 3 local (sherlock-finance, x-advanced-research, finance-master/SKILL.md)
-# 注：3 个 local skill 在 sources.local 中声明，不作为独立 entry，因此 skills 列表为 26 条。
+# Skill Registry · finance-master product tree (v4.6.8+)
+# Updated: 2026-07-12 · aligned to post-quarantine US monoculture layout
+# Live SKILL.md count: 20 (excluding evals/ and finance-master-auditor)
+
+version: "4.6.8"
+product_ecosystem: "4.6.8"
+auditor_version: "4.6.8"
+auditor_role: monitor_and_notify_only
+market_scope: US_EQUITIES_ONLY
+
+# Paths relative to finance-master root (Hermes: ~/.hermes/skills/finance-master/)
+layout:
+  root: finance-master/
+  entry: SKILL.md
+  version_file: VERSION
+  brain: sherlock-finance/
+  discovery:
+    - x-advanced-research/
+    - serenity-skill/
+  uzi: UZI-Skill/          # do not rename; Hermes GitHub watcher target
+  finance_skills: finance-skills/  # do not rename; Hermes GitHub watcher target
+  local_only:
+    - evals/               # Python + fixtures; not required for Grok Web upload
+  deleted:
+    - _quarantine/         # removed 2026-07-12; bans live in banned-patterns.yaml
 
 sources:
   finance-skills:
     repo: github.com/himself65/finance-skills
     branch: main
-    skills: 21
+    local_path: finance-skills/
+    hermes_target: "~/.hermes/skills/finance-master/finance-skills"
+    note: "Internal layout frozen for watcher; product patches via PATCH strategy"
   UZI-Skill:
     repo: github.com/wbh604/UZI-Skill
     branch: main
-    skills: 4
-    note: purified — scripts/personas/assets stripped, investor-panel & lhb-analyzer rewritten to v4.0 agent-driven
+    local_path: UZI-Skill/
+    hermes_target: "~/.hermes/skills/finance-master/UZI-Skill"
+    note: "Internal layout frozen; deep-analysis/investor-panel/trap-detector are NOTIFY (local rewrites). lhb-analyzer BANNED."
   serenity-skill:
     repo: github.com/muxuuu/serenity-skill
     branch: main
-    skills: 1
-    note: purified — Python scripts deleted, bottleneck-scorecard.md created
+    local_path: serenity-skill/
+    hermes_target: "~/.hermes/skills/finance-master/serenity-skill"
+    note: "Internal layout frozen; NOTIFY on upstream (US-first product patches)"
   local:
-    skills: 3
-    note: sherlock-finance, x-advanced-research, finance-master/SKILL.md (no upstream)
+    skills:
+      - finance-master/SKILL.md
+      - sherlock-finance
+      - x-advanced-research
+    note: no upstream auto-sync
 
+# === LIVE SKILLS (20) ===
 skills:
-  # === SECURITY LAYER (priority 0) ===
-  - name: trap-detector
-    source: UZI-Skill
-    category: security
-    priority: 0
-    triggers:
-      - "朋友推荐"
-      - "群里说"
-      - "老师带"
-      - "内幕消息"
-      - "小红书推荐"
-      - "抖音荐股"
-      - "稳赚"
-      - "必涨"
-    combinations: []
-    conflicts: []
+  # L0
+  - name: finance-master
+    path: SKILL.md
+    source: local
+    role: L0_entry
+    grok_upload: required
 
-  # === DEEP ANALYSIS LAYER (priority 1) ===
+  # L1
+  - name: sherlock-finance
+    path: sherlock-finance/
+    source: local
+    role: L1_brain
+    grok_upload: required
+    sync: SKIP
+
+  - name: x-advanced-research
+    path: x-advanced-research/
+    source: local
+    role: L2_discovery_x
+    grok_upload: required
+    sync: SKIP
+
+  - name: serenity-skill
+    path: serenity-skill/
+    source: serenity-skill
+    role: L2_discovery_bottleneck
+    grok_upload: required
+    sync: NOTIFY
+
+  # UZI
   - name: deep-analysis
+    path: UZI-Skill/deep-analysis/
     source: UZI-Skill
-    category: deep-analysis
-    priority: 1
-    triggers:
-      - "深度分析"
-      - "全面分析"
-      - "帮我看看"
-      - "值不值得买"
-      - "DCF"
-      - "机构建模"
-      - "首次覆盖"
-      - "IC memo"
-      - "投委会"
-    combinations: [investor-panel]
-    conflicts_priority_over: [company-valuation]
+    role: L2_deep
+    grok_upload: required
+    sync: NOTIFY
 
   - name: investor-panel
+    path: UZI-Skill/investor-panel/
     source: UZI-Skill
-    category: deep-analysis
-    priority: 2
-    triggers:
-      - "评审团"
-      - "大佬怎么看"
-      - "投票"
-      - "某某会买吗"
-      - "投资者怎么看"
-    combinations: [deep-analysis]
-    conflicts: []
+    role: L2_panel
+    grok_upload: required
+    sync: NOTIFY
 
-  - name: lhb-analyzer
+  - name: trap-detector
+    path: UZI-Skill/trap-detector/
     source: UZI-Skill
-    category: deep-analysis
-    priority: 1
-    triggers:
-      - "龙虎榜"
-      - "游资"
-      - "谁在买"
-      - "席位"
-    combinations: [finance-sentiment]
-    conflicts: []
-    note: A 股龙虎榜专用，美股请求不会触发
+    role: L2_safety
+    grok_upload: required
+    sync: NOTIFY
 
-  # === VALUATION LAYER (priority 3) ===
+  # finance-skills (13 live)
   - name: company-valuation
+    path: finance-skills/company-valuation/
     source: finance-skills
-    category: valuation
-    priority: 3
-    triggers:
-      - "估值"
-      - "目标价"
-      - "PE"
-      - "PB"
-      - "ROE"
-      - "财报分析"
-    combinations: [yfinance-data]
-    conflicts_priority_over: []
-
+    sync: PATCH
   - name: earnings-preview
+    path: finance-skills/earnings-preview/
     source: finance-skills
-    category: valuation
-    priority: 3
-    triggers:
-      - "盈利预测"
-      - "业绩前瞻"
-      - "财报前瞻"
-    combinations: [estimate-analysis]
-    conflicts: []
-
+    sync: PATCH
   - name: earnings-recap
+    path: finance-skills/earnings-recap/
     source: finance-skills
-    category: valuation
-    priority: 4
-    triggers:
-      - "财报解读"
-      - "业绩回顾"
-      - "beat"
-      - "miss"
-    combinations: []
-    conflicts: []
-
+    sync: PATCH
   - name: estimate-analysis
+    path: finance-skills/estimate-analysis/
     source: finance-skills
-    category: valuation
-    priority: 3
-    triggers:
-      - "分析师预期"
-      - "一致预期"
-      - "estimate revision"
-      - "上调"
-      - "下调"
-    combinations: []
-    conflicts: []
-
-  - name: sepa-strategy
-    source: finance-skills
-    category: valuation
-    priority: 3
-    triggers:
-      - "SEPA"
-      - "Minervini"
-      - "VCP"
-      - "趋势模板"
-      - "Stage分析"
-    combinations: []
-    conflicts: []
-
-  - name: stock-correlation
-    source: finance-skills
-    category: valuation
-    priority: 4
-    triggers:
-      - "相关性"
-      - "同行业"
-      - "pair trade"
-      - "跟谁走"
-      - "联动"
-    combinations: []
-    conflicts: []
-
-  - name: stock-liquidity
-    source: finance-skills
-    category: valuation
-    priority: 4
-    triggers:
-      - "流动性"
-      - "买卖价差"
-      - "成交量"
-    combinations: []
-    conflicts: []
-
-  - name: options-payoff
-    source: finance-skills
-    category: valuation
-    priority: 4
-    triggers:
-      - "期权"
-      - "payoff"
-      - "到期日"
-      - "strike"
-      - "Call"
-      - "Put"
-    combinations: []
-    conflicts: []
-
+    sync: PATCH
   - name: etf-premium
+    path: finance-skills/etf-premium/
     source: finance-skills
-    category: valuation
-    priority: 4
-    triggers:
-      - "ETF"
-      - "折溢价"
-      - "NAV"
-    combinations: []
-    conflicts: []
-
-  - name: saas-valuation-compression
-    source: finance-skills
-    category: valuation
-    priority: 4
-    triggers:
-      - "SaaS"
-      - "估值压缩"
-      - "ARR"
-      - "MRR"
-      - "Rule of 40"
-    combinations: []
-    conflicts: []
-
-  # === DATA LAYER (priority 2 — load before analysis) ===
-  - name: yfinance-data
-    source: finance-skills
-    category: data
-    priority: 2
-    triggers:
-      - "股价"
-      - "行情"
-      - "k线"
-      - "历史数据"
-      - "yfinance"
-    combinations: [company-valuation]
-    conflicts: []
-
+    sync: PATCH
   - name: finance-sentiment
+    path: finance-skills/finance-sentiment/
     source: finance-skills
-    category: data
-    priority: 4
-    triggers:
-      - "情绪"
-      - "舆情"
-      - "Reddit"
-      - "X sentiment"
-      - "华尔街讨论"
-    combinations: []
-    conflicts: []
-
-  - name: funda-data
-    source: finance-skills
-    category: data
-    priority: 2
-    triggers:
-      - "基本面数据"
-      - "财务数据"
-      - "funda"
-    combinations: [company-valuation]
-    conflicts_priority_over: [yfinance-data]
-
+    sync: PATCH
   - name: hormuz-strait
+    path: finance-skills/hormuz-strait/
     source: finance-skills
-    category: data
-    priority: 4
-    triggers:
-      - "霍尔木兹海峡"
-      - "航运"
-      - "地缘"
-      - "原油供应中断"
-    combinations: []
-    conflicts: []
-
-  - name: tradingview-reader
+    sync: PATCH
+  - name: options-payoff
+    path: finance-skills/options-payoff/
     source: finance-skills
-    category: data
-    priority: 4
-    triggers:
-      - "TradingView"
-    combinations: []
-    conflicts: []
-
-  # === SOCIAL LAYER (priority 4 — Hermes only, Grok → web/X search) ===
-  - name: discord-reader
+    sync: PATCH
+  - name: saas-valuation-compression
+    path: finance-skills/saas-valuation-compression/
     source: finance-skills
-    category: social
-    priority: 4
-    triggers:
-      - "Discord"
-    combinations: []
-    conflicts: []
-    note: Hermes only · opencli
-
-  - name: linkedin-reader
+    sync: PATCH
+  - name: sepa-strategy
+    path: finance-skills/sepa-strategy/
     source: finance-skills
-    category: social
-    priority: 4
-    triggers:
-      - "LinkedIn"
-    combinations: []
-    conflicts: []
-    note: Hermes only · opencli
-
-  - name: telegram-reader
-    source: finance-skills
-    category: social
-    priority: 4
-    triggers:
-      - "Telegram"
-    combinations: []
-    conflicts: []
-    note: Hermes only · CLI
-
-  - name: twitter-reader
-    source: finance-skills
-    category: social
-    priority: 4
-    triggers:
-      - "Twitter"
-      - "X.com"
-    combinations: []
-    conflicts: []
-    note: Hermes only · opencli · Grok 模式由 x-advanced-research 替代
-
-  - name: opencli-reader
-    source: finance-skills
-    category: social
-    priority: 5
-    triggers:
-      - "通用阅读"
-      - "网页抓取"
-    combinations: []
-    conflicts: []
-    note: Hermes only · opencli
-
-  # === STARTUP LAYER (priority 4) ===
+    sync: PATCH
   - name: startup-analysis
+    path: finance-skills/startup-analysis/
     source: finance-skills
-    category: startup
-    priority: 4
-    triggers:
-      - "创业分析"
-      - "startup"
-      - "VC"
-      - "天使"
-      - "种子轮"
-    combinations: []
-    conflicts: []
+    sync: PATCH
+  - name: stock-correlation
+    path: finance-skills/stock-correlation/
+    source: finance-skills
+    sync: PATCH
+  - name: stock-liquidity
+    path: finance-skills/stock-liquidity/
+    source: finance-skills
+    sync: PATCH
 
-  # === SUPPLY CHAIN LAYER (priority 3) ===
-  - name: serenity-skill
-    source: serenity-skill
-    category: supply-chain
-    priority: 3
-    triggers:
-      - "供应链"
-      - "瓶颈"
-      - "卡脖子"
-      - "chokepoint"
-      - "Serenity"
-    combinations: [deep-analysis, x-advanced-research]
-    conflicts: []
+# Explicitly banned (must not reappear live)
+banned_skills:
+  - lhb-analyzer
+  - yfinance-data
+  - funda-data
+  - twitter-reader
+  - discord-reader
+  - telegram-reader
+  - linkedin-reader
+  - tradingview-reader
+  - opencli-reader
+  - generative-ui
+  - skill-creator
+  - hyperliquid-reader
+  - yc-reader
 
-# Conflict resolution rules
-conflict_rules:
-  - when: ["deep-analysis", "company-valuation"]
-    resolve: "deep-analysis wins (superset)"
-  - when: ["earnings-preview", "earnings-recap"]
-    resolve: "earnings-preview wins, recap as supplement"
-  - when: ["funda-data", "yfinance-data"]
-    resolve: "funda-data wins (data quality)"
+# Grok Web skill payload rules
+grok_web:
+  required:
+    - YAML frontmatter on every SKILL.md (name, description, version)
+    - Markdown-first content
+  exclude_from_upload_optional:
+    - evals/                 # local structural suite (contains .py)
+    - finance-master-auditor # Hermes-only ops skill (sibling package)
+  allowed_non_md:
+    - LICENSE
+    - VERSION
+  forbidden_in_skill_tree:
+    - "*.py"                 # except under evals/ if kept local
+    - plugin.json
+    - requirements.txt
+    - personas/
+    - scripts/               # inside L2 skills (product)
 
-# Security pre-checks
-security_precheck:
-  - when: any trigger from trap-detector
-    action: "load trap-detector first, block analysis until cleared · §9 安全优先分支"
+# Counts
+counts:
+  live_skill_md: 20
+  l0: 1
+  l1: 1
+  l2: 18

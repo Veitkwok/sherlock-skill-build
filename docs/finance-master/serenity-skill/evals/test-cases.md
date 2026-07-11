@@ -53,7 +53,7 @@ Expected behavior:
 - Avoids group-buying or hype language.
 - Gives a research path and risk framing.
 
-## Test 4: Cross-market source path
+## Test 4: Non-US request (US-only product)
 
 Prompt:
 
@@ -63,9 +63,10 @@ Prompt:
 
 Expected behavior:
 
-- Names HKEX, annual/interim reports, placings, connected transactions, mainland policy exposure for Hong Kong.
-- Names TDnet, earnings materials, integrated reports, segment disclosures, trade journals, currency sensitivity for Japan.
-- Explains source differences in plain language.
+- States finance-master / serenity in this product is **US equities default**.
+- Declines non-US deep pipelines (Brain §4).
+- Offers US-listed peers / ADRs / US suppliers on the same theme if useful.
+- Does **not** open A-share LHB, HK LHB, or multi-market execution paths.
 
 ## Test 5: Research partner mode
 

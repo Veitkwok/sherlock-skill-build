@@ -1,5 +1,9 @@
 # DCF Methodology — Detailed Reference
 
+> ⚠️ **v4.6.6 data fence:** Do **not** `import yfinance`, `pip install yfinance`, or execute `yf.*` / `Ticker(`. Live path = Brain **DATA_PACK** → **IBKR MCP** → **Web/X**. Any remaining Yahoo-shaped names are **labels only**, not runnable code.
+
+
+
 Expands on the summary in SKILL.md. Use this when building the DCF build table or when the user asks for industry-specific treatment.
 
 ## When DCF Is Appropriate

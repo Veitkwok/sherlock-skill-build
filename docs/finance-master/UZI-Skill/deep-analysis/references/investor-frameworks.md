@@ -1,7 +1,8 @@
 # 美股投资者分析框架速查表
 
+> **v4.5:** Canonical **US-36** for deep-analysis / investor-panel. No A-share 游资.
 > 36 位投资大师的方法论浓缩。用于深度分析时快速匹配投资者视角。
-> 数据来源: UZI-Skill personas YAML (flagship) + investor_criteria.py (stub) + 公开知识 (新增)
+> 数据来源: UZI-Skill personas + 公开知识（脚本/YAML 已废弃）
 
 ---
 

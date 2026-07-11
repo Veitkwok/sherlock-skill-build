@@ -1,42 +1,10 @@
-# Stock Liquidity Analysis
+# stock-liquidity · finance-master v4.5
 
-Analyze stock liquidity across multiple dimensions using Yahoo Finance data — bid-ask spreads, volume profiles, order book depth estimates, market impact modeling, and turnover ratios.
+Live L2 skill under **sherlock-finance** (Central Brain).
 
-## Triggers
+- **Data:** Brain `DATA_PACK` → IBKR MCP (market) → Web/X (fundamentals/narrative)
+- **Not required:** yfinance, funda skill, longbridge, Hermes opencli readers
+- **Contract:** return `### RETURN_BLOCK` to the Brain (see `SKILL.md`)
+- **Market:** US equities (unless skill is macro like hormuz)
 
-- "how liquid is AAPL"
-- "bid-ask spread for TSLA"
-- "volume analysis for MSFT"
-- "order book depth"
-- "how much would 50k shares move the price"
-- "market impact of a $1M order"
-- "turnover ratio for GME"
-- "slippage estimate"
-- "compare liquidity between stocks"
-- "is this stock liquid enough to trade"
-- "Amihud illiquidity ratio"
-- "average daily dollar volume"
-
-## Platform
-
-All platforms (CLI + Claude.ai with code execution enabled)
-
-## Prerequisites
-
-- Python 3.8+
-- `yfinance`, `pandas`, `numpy` (auto-installed if missing)
-
-## Sub-Skills
-
-| Sub-Skill | Description |
-|---|---|
-| **Liquidity Dashboard** | Comprehensive snapshot combining all key metrics |
-| **Spread Analysis** | Bid-ask spread breakdown with options context |
-| **Volume Analysis** | ADV, dollar volume, RVOL, volume trends and patterns |
-| **Order Book Depth** | Top-of-book data with intraday volume distribution proxy |
-| **Market Impact** | Square-root model for estimating execution cost of large orders |
-| **Turnover Ratio** | Trading activity relative to shares outstanding and free float |
-
-## Reference Files
-
-- `references/liquidity_reference.md` — Detailed formulas, code templates, metric interpretation guides, edge cases, and yfinance field reference
+See `SKILL.md` for workflow. Methodology-only notes may live in `references/` — ignore obsolete yfinance code paths.

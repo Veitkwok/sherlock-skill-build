@@ -1,0 +1,34 @@
+{
+  "repos": [
+    {
+      "name": "finance-skills",
+      "url": "https://github.com/himself65/finance-skills",
+      "branch": "main",
+      "type": "multi-skill",
+      "target": "~/.hermes/skills/finance-master/finance-skills"
+    },
+    {
+      "name": "UZI-Skill",
+      "url": "https://github.com/wbh604/UZI-Skill",
+      "branch": "main",
+      "type": "uzi-purified",
+      "skills": ["deep-analysis", "investor-panel", "trap-detector"],
+      "source_skills_dir": "skills",
+      "target": "~/.hermes/skills/finance-master/UZI-Skill"
+    },
+    {
+      "name": "serenity-skill",
+      "url": "https://github.com/muxuuu/serenity-skill",
+      "branch": "main",
+      "type": "single-skill",
+      "target": "~/.hermes/skills/finance-master/serenity-skill"
+    }
+  ],
+  "state_file": "~/.hermes/data/skill-watch-state.json",
+  "diff_file": "~/.hermes/data/skill-watch-diff.json",
+  "cache_dir": "~/.hermes/scripts/skill-watch-cache",
+  "cron": {
+    "command": "cd ~/.hermes/skills/finance-master-auditor/scripts && PATH=/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin python3 skill-watchdog.py",
+    "note": "Monitor only. If skill-watch-diff.json notify=true, message user; never auto-merge."
+  }
+}

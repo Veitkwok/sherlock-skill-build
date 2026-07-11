@@ -1,100 +1,102 @@
 # Dynamic Peer Universe Construction
 
-How to build a peer universe at runtime for correlation analysis. **Do not hardcode ticker lists** — fetch them dynamically so results stay current.
+> ⚠️ **v4.6.6 data fence:** Do **not** `import yfinance`, `pip install yfinance`, or call `yf.*`.  
+> Live path: Brain **DATA_PACK** → **IBKR** (`get_company_themes` / `get_company_connections`) → **Web**.  
+> Algorithms below take **already-fetched** pack / Web fields only.
+
+How to build a peer universe at runtime for correlation analysis. **Do not hardcode ticker lists** when IBKR themes or Web comps are available.
 
 ---
 
-## Method 1: Same-Sector Screen (Primary)
+## Method 1: IBKR themes / connections (Primary)
 
-Use yfinance's `yf.screen()` + `EquityQuery` to find stocks in the same sector as the target. Note: the screener supports filtering by `sector` but not directly by `industry` — use sector-level screening and let the correlation math surface the closest peers.
+```text
+INPUTS (from DATA_PACK or IBKR):
+  ticker, contract_id
+  peers.symbols[]          # from get_company_themes / get_company_connections
+  peers.theme_labels[]
 
-```python
-import yfinance as yf
-from yfinance import EquityQuery
-
-def get_sector_peers(ticker_symbol, min_market_cap=1_000_000_000, max_results=30):
-    """Find peers in the same sector above a market cap threshold."""
-    target = yf.Ticker(ticker_symbol)
-    info = target.info
-    sector = info.get("sector", "")
-
-    if not sector:
-        return []
-
-    # Screen for same-sector stocks on major US exchanges
-    query = EquityQuery("and", [
-        EquityQuery("eq", ["sector", sector]),
-        EquityQuery("gt", ["intradaymarketcap", min_market_cap]),
-        EquityQuery("is-in", ["exchange", "NMS", "NYQ"]),
-    ])
-
-    result = yf.screen(query, size=max_results, sortField="intradaymarketcap", sortAsc=False)
-
-    peers = []
-    for quote in result.get("quotes", []):
-        symbol = quote.get("symbol", "")
-        if symbol and symbol != ticker_symbol:
-            peers.append(symbol)
-
-    return peers
+ALGORITHM:
+  1. Prefer pack.peers.symbols if non-empty
+  2. Else Brain/L2 may_fetch → IBKR themes (max_companies per theme) → US STK only
+  3. Drop non-US, leveraged single-name ETFs, exact self-ticker
+  4. Cap universe size (e.g. 15–30) before correlation
 ```
 
-## Method 2: Thematic Expansion
-
-For cross-sector correlations (e.g., AI supply chain spans semis + cloud + software), read the target's business description and screen adjacent sectors:
+Pseudocode (no yfinance):
 
 ```python
-def get_thematic_context(ticker_symbol):
-    """Get company context to inform adjacent-sector screening."""
-    target = yf.Ticker(ticker_symbol)
-    info = target.info
+def get_sector_peers_from_pack(data_pack, max_results=30):
+    """Peers from Brain DATA_PACK / IBKR themes only."""
+    peers = list(data_pack.get("peers", {}).get("symbols") or [])
+    self_sym = data_pack.get("ticker")
+    out = [s for s in peers if s and s != self_sym][:max_results]
+    return out
+```
+
+If pack peers empty and `budget.may_fetch`: resolve themes via IBKR MCP tools — **not** Yahoo screener APIs.
+
+---
+
+## Method 2: Thematic expansion (Web + IBKR)
+
+```text
+INPUTS:
+  pack.fundamentals_web / Web business description
+  pack.peers.theme_labels
+  optional Web industry peers
+
+ALGORITHM:
+  1. Read sector / industry / product graph from pack or IBKR connections
+  2. Add 1–2 adjacent themes (e.g. semi equipment next to GPU names)
+  3. Union with Method 1; dedupe; US-list only
+```
+
+```python
+def get_thematic_context_from_pack(data_pack):
     return {
-        "sector": info.get("sector", ""),
-        "industry": info.get("industry", ""),
-        "description": info.get("longBusinessSummary", ""),
+        "sector": data_pack.get("sector") or data_pack.get("fundamentals_web", {}).get("sector", ""),
+        "industry": data_pack.get("industry") or "",
+        "description": data_pack.get("profile_note") or "",
+        "themes": data_pack.get("peers", {}).get("theme_labels") or [],
     }
 ```
 
-After reading the company description, screen 1-2 adjacent sectors. For example:
-- A semiconductor company (Technology sector) → also consider screening for related names in "Industrials" (equipment suppliers)
-- A cloud platform → also screen for networking/data-center REITs
-- An EV maker (Consumer Cyclical) → also screen "Basic Materials" (battery materials), "Industrials" (auto parts)
+Examples of adjacent themes (logic only):
 
-## Combining Methods
-
-Build the full universe by combining sector screen + thematic expansion:
-
-```python
-def build_peer_universe(ticker_symbol):
-    """Build a comprehensive peer universe for correlation analysis."""
-    peers = set()
-
-    # 1. Same sector
-    sector_peers = get_sector_peers(ticker_symbol, min_market_cap=1_000_000_000, max_results=25)
-    peers.update(sector_peers)
-
-    # 2. If too few, lower the market cap threshold
-    if len(peers) < 10:
-        more_peers = get_sector_peers(ticker_symbol, min_market_cap=500_000_000, max_results=30)
-        peers.update(more_peers)
-
-    # 3. Add thematic/adjacent sectors based on business description
-    # (model should reason about which adjacent sectors to screen)
-
-    peers.discard(ticker_symbol)
-    return list(peers)
-```
-
-**Target**: 15-30 peers for a meaningful correlation scan. Too few gives sparse results; too many slows the yfinance download.
+- Semiconductor → equipment / materials  
+- Cloud platform → networking / data-center power  
+- EV maker → battery materials / auto parts  
 
 ---
 
-## Fallback: Well-Known Groupings
+## Combining methods
 
-If the screener is unavailable or rate-limited, use well-known benchmarks:
+```python
+def build_peer_universe(data_pack):
+    peers = set(get_sector_peers_from_pack(data_pack, max_results=25))
+    ctx = get_thematic_context_from_pack(data_pack)
+    # optional: merge Web comps table tickers already in pack
+    for s in data_pack.get("comps_tickers") or []:
+        if s and s != data_pack.get("ticker"):
+            peers.add(s)
+    return sorted(peers)
+```
 
-- **Mag 7**: AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA
-- **Major indices**: SPY (S&P 500), QQQ (Nasdaq 100), DIA (Dow 30), IWM (Russell 2000)
-- **Sector ETFs**: XLK, XLF, XLE, XLV, XLI, XLP, XLU, XLY, XLC, XLRE, XLB
+If `len(peers) < 5`: mark `DATA_GAP: peers` and lower conf (≤ B) rather than inventing a universe.
 
-These ETFs are useful as correlation benchmarks — comparing a stock's correlation to sector ETFs quickly reveals its primary driver.
+---
+
+## Correlation math (unchanged intent)
+
+Once you have peer symbols + IBKR/Web price history for each:
+
+1. Align daily closes  
+2. Compute returns correlation matrix  
+3. Report top-N correlated peers + note sample window  
+
+**Price history source:** IBKR `get_price_history` or pack `ohlcv.daily` — never yfinance downloads.
+
+---
+
+*v4.6.6 · IBKR/Web peers only · yfinance fenced*
